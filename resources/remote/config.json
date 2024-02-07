@@ -1,0 +1,24 @@
+{
+  "payments": {
+    "rpc_endpoint": "http://optimism-sequencer-nillion-op-sepolia.testnet.nilogy.xyz",
+    "signer": {
+      "wallet": {
+        "chain_id": 22255222,
+        "private_key": "0c77c3e45a2738fc03bc7608c934234acd959dfbf13379c4a83f0a0e5a7a7c2e"
+      }
+    },
+    "smart_contract_addresses": {
+      "blinding_factors_manager": "0xa303db684e6c56367522f246b2bc6018176fd3a5",
+      "payments": "0x892416add5d6333cf5338aaf652681c90185e694"
+    }
+  },
+  "bootnodes": [
+    "/dns/node-1.testnet-fe.nillion-network.nilogy.xyz/tcp/14111/p2p/12D3KooWNbB2dobuVpH5qetmWnamsKr1G9rC5Sbvj2UsMt3jvQxK",
+    "/dns/node-2.testnet-fe.nillion-network.nilogy.xyz/tcp/14111/p2p/12D3KooWHuSKUJyDZsZf1WVLbjstej6yrcj1Wm1SspvFTKYiLY4J"
+  ],
+  "clusters": [
+    {
+      "id": "f592f8ea-7651-4ab8-b692-ef149b783dc9"
+    }
+  ]
+}

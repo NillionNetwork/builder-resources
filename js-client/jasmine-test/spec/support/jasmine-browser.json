@@ -1,0 +1,37 @@
+{
+  "port": 9191,
+  "srcDir": "src",
+  "srcFiles": [],
+  "specDir": ".",
+  "specFiles": [
+    "spec/**/*[sS]pec.?(m)js"
+  ],
+  "helpers": [
+    "spec/helpers/**/*.?(m)js"
+  ],
+  "esmFilenameExtension": ".mjs",
+  "enableTopLevelAwait": true,
+  "env": {
+    "stopSpecOnExpectationFailure": false,
+    "stopOnSpecFailure": false,
+    "random": false
+  },
+  "browser": {
+    "name": "headlessChrome"
+  },
+  "importMap": {
+    "moduleRootDir": "node_modules",
+    "imports": {
+      "@noble/ed25519": "@noble/ed25519/index.js",
+      "base58-js": "base58-js/index.mjs",
+      "@nillion/nillion-client-js-browser": "@nillion/nillion-client-js-browser/nillion_client_js_browser.js"
+    }
+  },
+  "headers": {
+    "Cross-Origin-Embedder-Policy": "require-corp",
+    "Cross-Origin-Opener-Policy": "same-origin"
+  },
+  "stopSpecOnExpectationFailure": false,
+  "stopOnSpecFailure": false,
+  "random": false
+}

@@ -1,0 +1,275 @@
+import * as nillion from "@nillion/nillion-client-js-browser";
+// update_secret
+
+import { loadFixtureConfig } from "../src/config.js";
+import {
+  bigIntFromByteArray,
+  generate_user_key,
+  strFromByteArray,
+  strToByteArray,
+} from "../src/utils.js";
+
+window.jasmine.DEFAULT_TIMEOUT_INTERVAL = 500;
+
+async function new_nillion_client(config) {
+  let user_key = await generate_user_key();
+  //   let node_key_seed = binary_to_base58(ed.utils.randomPrivateKey());
+  let node_key_seed = "nillion-testnet-seed-1";
+  await nillion.default();
+
+  // $ websocat -s 11100 | tee /tmp/wasm.log
+  return new nillion.WasmNillionClient(
+    user_key,
+    node_key_seed,
+    config.bootnodes,
+    false,
+    config.payments_config,
+  );
+}
+
+const encode_and_insert = async (secrets, id, value) => {
+  const encoded = await nillion.encode_unsigned_integer_secret(
+    id,
+    { as_string: String(value) },
+  );
+  await secrets.insert(encoded);
+};
+// We cannot create multiple clients that share the same
+// node key and cluster_id
+describe("Nillion Client", () => {
+  let context = {};
+
+  beforeAll(async () => {
+    context.config = await loadFixtureConfig();
+    context.test1 = {
+      expected_party_id: "12D3KooWGq5MCUuLARrwM95muvipNWy4MqmCk41g9k9JVth6AF6e",
+      input: "this is a test",
+    };
+  });
+
+  it("should validate client config", async () => {
+    expect(context.config.bootnodes).toBeDefined();
+    expect(context.config.payments_config).toBeDefined();
+    expect(context.config.cluster_id).toBeDefined();
+    expect(context.config.programs?.simple).toBeDefined();
+  });
+
+  it("should create a nillion js client", async () => {
+    context.client = await new_nillion_client(context.config);
+    expect(context.client).toBeDefined();
+    expect(context.client).toBeInstanceOf(nillion.WasmNillionClient);
+  });
+
+  it("should have predictable party_id because of the hardcoded node key seed", async () => {
+    let my_party_id = await context.client.party_id();
+    expect(my_party_id).toBeDefined();
+    expect(my_party_id).toEqual(context.test1.expected_party_id);
+    context.test1.party_id = my_party_id;
+  });
+
+  it("should be able to encode a blob secret (string)", async () => {
+    const resultBytes = strToByteArray(context.test1.input);
+    const encoded = await nillion.encode_blob_secret(
+      "secret-blob",
+      { bytes: resultBytes },
+    );
+    expect(encoded).toBeDefined();
+    context.test1.input_encoded_str = encoded;
+    expect(encoded).toBeInstanceOf(nillion.WasmSecret);
+  });
+
+  it("should be able to push a blob secret to Secrets", async () => {
+    const secrets = new nillion.NilSecrets();
+    expect(secrets).toBeInstanceOf(nillion.NilSecrets);
+    expect(secrets).toBeDefined();
+    await secrets.insert(context.test1.input_encoded_str);
+    context.test1.secrets = secrets;
+  });
+
+  it("should be able to store a Secrets", async () => {
+    let result = await context.client.store(
+      context.config.cluster_id,
+      context.test1.secrets,
+    );
+    expect(result).toBeDefined();
+    expect(result).not.toBe("");
+    context.test1.store_result = result;
+  }, 10000);
+
+  it("should be able to retrieve a Secrets", async () => {
+    expect(context.test1.store_result).toBeDefined();
+    const secret = await context.client.retrieve(
+      context.config.cluster_id,
+      context.test1.store_result,
+      "secret-blob",
+    );
+    expect(secret).toBeDefined();
+    expect(secret).not.toBe("");
+    context.test1.retrieve_result = secret;
+  }, 10000);
+
+  it("should be able to decode a blob secret", async () => {
+    expect(context.test1.retrieve_result).toBeDefined();
+    const result = await nillion.decode_bytearray_secret(
+      context.test1.retrieve_result,
+    );
+    let result_decoded = strFromByteArray(result);
+    expect(result_decoded).toBe(context.test1.input);
+  });
+
+  it("should be able to create a program binding", async () => {
+    expect(context.config.programs.simple).toBeDefined();
+    const result = new nillion.WasmProgramBindings(
+      context.config.programs.simple,
+    );
+    context.test1.program_binding_simple = result;
+    expect(result).toBeInstanceOf(nillion.WasmProgramBindings);
+  });
+
+  it("should be able to encode an signed integer secret", async () => {
+    const encoded = await nillion.encode_signed_integer_secret(
+      "secret-integer",
+      { as_string: "-42" },
+    );
+    context.test1.input_encoded_integer = encoded;
+    expect(encoded).toBeInstanceOf(nillion.WasmSecret);
+  });
+
+  it("should be able to encode an unsigned integer secret", async () => {
+    const encoded = await nillion.encode_unsigned_integer_secret(
+      "secret-uinteger",
+      { as_string: "42" },
+    );
+    context.test1.input_encoded_uinteger = encoded;
+    expect(encoded).toBeInstanceOf(nillion.WasmSecret);
+  });
+
+  it("should be able to encode an unsigned decimal secret", async () => {
+    const encoded = await nillion.encode_unsigned_decimal_secret(
+      "secret-udecimal",
+      { as_string: "4242424242" },
+      0,
+    );
+    context.test1.input_encoded_udecimal = encoded;
+    expect(encoded).toBeInstanceOf(nillion.WasmSecret);
+  });
+
+  // The parties of the simple program are
+  // - Dealer
+  // - Result
+  it("should be able to add_input_party to a program binding", async () => {
+    context.test1.program_binding_simple.add_input_party(
+      "Dealer",
+      context.test1.party_id,
+    );
+  });
+
+  it("should be able to add_output_party to a program binding", async () => {
+    context.test1.program_binding_simple.add_output_party(
+      "Result",
+      context.test1.party_id,
+    );
+  });
+
+  it("should be able to prep compute inline secrets: [simple]", async () => {
+    const compute_secrets = new nillion.NilSecrets();
+    await encode_and_insert(compute_secrets, `I00`, 17517);
+    await encode_and_insert(compute_secrets, `I01`, 5226);
+    await encode_and_insert(compute_secrets, `I02`, 15981);
+    context.test1.compute_secrets = compute_secrets;
+  });
+
+  it("should be able to prep stored compute secrets: [simple]", async () => {
+    const store_secrets = new nillion.NilSecrets();
+    await encode_and_insert(store_secrets, `I03`, 2877);
+    await encode_and_insert(store_secrets, `I04`, 2564);
+
+    const bindings = new nillion.WasmProgramBindings(
+      context.config.programs.simple,
+    );
+    bindings.add_input_party("Dealer", context.test1.party_id);
+    bindings.add_output_party("Result", context.test1.party_id);
+
+    let store_uuid = await context.client.store(
+      context.config.cluster_id,
+      store_secrets,
+      bindings,
+    );
+    expect(store_uuid).toBeDefined();
+    context.test1.compute_store_secrets_uuid = store_uuid;
+  }, 30000);
+
+  it("should be able to compute program: [simple]", async () => {
+    if (!context.test1.compute_store_secrets_uuid) {
+      pending("compute store secrets uuid not set, skipping test.");
+    }
+    const bindings = new nillion.WasmProgramBindings(
+      context.config.programs.simple,
+    );
+    bindings.add_input_party("Dealer", context.test1.party_id);
+    bindings.add_output_party("Result", context.test1.party_id);
+
+    const compute_result_uuid = await context.client.compute(
+      context.config.cluster_id,
+      bindings,
+      [context.test1.compute_store_secrets_uuid],
+      context.test1.compute_secrets,
+    );
+
+    expect(compute_result_uuid).toBeDefined();
+    expect(compute_result_uuid).not.toBe("");
+    context.test1.compute_result = compute_result_uuid;
+  }, 30000);
+
+  it("should be able to get a result from compute operation", async () => {
+    // compute_result
+    if (!context.test1.compute_result) {
+      pending("compute result not set, skipping test.");
+    }
+    const compute_result = await context.client.compute_result(
+      context.test1.compute_result,
+    );
+    expect(compute_result).toBeDefined();
+    expect(compute_result).not.toBe("");
+    const my_int = bigIntFromByteArray(compute_result.value);
+    expect(typeof my_int).toBe('bigint');
+    expect(my_int).toEqual(BigInt(1462969515630));
+  }, 10000);
+
+  it("should be able to update a secret", async () => {
+    const secrets = new nillion.NilSecrets();
+    const encoded = await nillion.encode_signed_integer_secret(
+      "another-integer",
+      { as_string: "1024" },
+    );
+    await secrets.insert(encoded);
+    const new_store_id = await context.client.update_secret(
+      context.config.cluster_id,
+      context.test1.store_result,
+      secrets,
+    );
+    // TODO: how can I check that the store has been updated? (maybe a compute program?)
+    expect(new_store_id).toBeDefined();
+    expect(new_store_id).not.toBe("");
+    context.test1.store_result = new_store_id;
+  }, 10000);
+
+  xit("should be able to retrieve_permissions", async () => {
+    const result = await context.client.retrieve_permissions(
+      context.config.cluster_id,
+      context.test1.store_result,
+      "another-integer",
+    );
+    expect(result).toBeDefined();
+    expect(result).toBeInstanceOf(nillion.NilPermissions);
+  }, 10000);
+
+  xit("should be able to delete a secret", async () => {
+    expect(context.test1.store_result).toBeDefined();
+    await context.client.delete_secrets(
+      context.config.cluster_id,
+      context.test1.store_result,
+    );
+  }, 10000);
+
+});
