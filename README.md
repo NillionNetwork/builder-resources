@@ -1,9 +1,14 @@
-# Nillion Resources
+![image](https://github.com/nillion-oss/builder-resources/assets/33910651/9a38748b-9d5f-4673-a49a-04d2cca180b9)
 
-## Current SDK
+# Builder Resources
+
+### Current SDK
 
 **release_version "v2024-02-06-0c6f3bec2"**
 
+# Getting Started
+
+🚀🚀 Visit the [Nillion Docs Repository](https://nillion.gitbook.io/docs/D7EurBeioQRXZMzb41z3/welcome-to-nillions-docs) where you can find all the latest up-to-date technical documentation, concepts and resources.
 
 ## Demo Code Compatibility Matrix
 > [!NOTE]
