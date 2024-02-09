@@ -3,7 +3,7 @@
 # Builder Resources
 
 > [!WARNING]
-> This repository contains code examples that may not be working with your SDK version. Please see compatability chart below and please report any [issues](https://github.com/nillion-oss/builder-resources/issues/new/choose) you uncover.
+> This repository contains code examples that may not be working with your SDK version. Please see compatability chart below and please [report any issues](https://github.com/nillion-oss/builder-resources/issues/new/choose) you uncover.
 
 ### Current SDK
 
@@ -16,6 +16,7 @@
 ## Demo Code Compatibility Matrix
 > [!NOTE]
 > The following exercises or examples are known to be working with the SDK bundle and/or deployment endpoint (testnet)
+> 
 > Symbols:
 > 
 > ✅ - it works! please file a bug report if it fails in your usage
