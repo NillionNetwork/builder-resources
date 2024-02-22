@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wasm Bindgen Example</title>
+  <script type="module">
+    import * as nillion from "./node_modules/@nillion/nillion-client-js-browser/nillion_client_js_browser.js";
+
+    const config = {
+      bootnodes: [
+        "/ip4/127.0.0.1/tcp/54633/ws/p2p/12D3KooWA92jGs5nqrhXR7DFSz121jSsQG82EVd3oEJGvmnJEtvR",
+      ],
+      cluster_id: "be1792bf-c1b8-429a-88ed-ac6b4cc32bba",
+      payments_config: {
+        rpc_endpoint: "http://localhost:38655",
+        smart_contract_addresses: {
+          blinding_factors_manager:
+            "a513e6e4b8f2a923d98304ec87f64353c4d5c853",
+          payments: "5fc8d32690cc91d4c39d9d3abcbd16989f875707",
+        },
+        signer: {
+          wallet: {
+            chain_id: 31337,
+            private_key:
+              "92db14e403b83dfe3df233f83dfa3a0d7096f21ca9b0d6d6b8d88b2b4ec1564e",
+          },
+        },
+      },
+      keypath: {
+        node: "/tmp/tmp.W1cNd34Dbe",
+        user: "/tmp/tmp.D7q5KYREn9",
+      },
+      programs: {
+        basic:
+          "4ztcmrQztaTL1mCsB5BQPe6VVVKG8mHb5EnKd7aKGpc6Y2o161PRxwjJpW8rNoQsihShUpv912pCFEUTtPs3Gtsa/basic",
+        simple:
+          "4ztcmrQztaTL1mCsB5BQPe6VVVKG8mHb5EnKd7aKGpc6Y2o161PRxwjJpW8rNoQsihShUpv912pCFEUTtPs3Gtsa/simple",
+      },
+    };
+    async function runApp() {
+      console.log(`run the default init`);
+      await nillion.default();
+      var userkey = nillion.UserKey.generate();
+      var nodekey = nillion.NodeKey.from_seed("this is a test");
+      const client = new nillion.WasmNillionClient(
+        userkey,
+        nodekey,
+        config.bootnodes,
+        false,
+        config.payments_config,
+      );
+      const status = await client.cluster_information(config.cluster_id);
+      console.log(`here is the cluster status result:`);
+      console.log(JSON.stringify(status, null, 4));
+    }
+    runApp();
+  </script>
+</head>
+
+<body>
+  <h1>WASM Bindgen Example</h1>
+  <p>Check the console for output from the WebAssembly module.</p>
+</body>
+
+</html>
