@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@nillion/nillion-client-js-browser": "file:../../../../Desktop/nillion/sdk/nillion-client-browser-npm.tar.gz",
+    "serve": "^14.2.1"
+  }
+}
