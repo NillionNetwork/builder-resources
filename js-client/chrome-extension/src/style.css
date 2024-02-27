@@ -1,0 +1,15 @@
+.new-tab {
+  background-color: #0021f5;
+  border: 3px solid #fff;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  color: #fff;
+  display: block;
+  font-size: 12px;
+  line-height: 16px;
+  margin: 0 0 10px;
+  padding: 10px;
+  position: relative;
+  text-decoration: none;
+  width: 100%;
+}
