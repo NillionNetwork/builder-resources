@@ -42,6 +42,7 @@ function daemonize_cluster() {
   
   nohup setsid "$RUN_LOCAL_CLUSTER" --seed "$SEED_PHRASE" > "$OUTFILE" 2>&1 &
   
+  SECONDS=0
   time_limit=40
   while true; do
       # Use 'wait' to check if the log file contains the string

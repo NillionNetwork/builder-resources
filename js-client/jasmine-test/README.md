@@ -9,6 +9,7 @@
 
 ## 2. install pre-requisite libraries
 ```bash
+npm run workspace:prepare
 npm i --include=dev
 ```
 

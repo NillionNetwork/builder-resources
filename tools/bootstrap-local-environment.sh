@@ -28,12 +28,14 @@ for var in PYNADAC RUN_LOCAL_CLUSTER USER_KEYGEN NODE_KEYGEN NIL_CLI; do
   printf "ℹ️ found bin %-18s -> [${!var:?Failed to discover $var}]\n" "$var"
 done
 
-compile_program "$TARGET_ENV_FILE_PATH"
+PYNADAC_COMPILE_ARTIFACTS=$(mktemp -d)
+compile_program "$PYNADAC_COMPILE_ARTIFACTS"
 
 OUTFILE=$(mktemp);
 
 PROGRAMINFO=$(mktemp);
-USERKEYFILE=$(mktemp);
+RUSERKEYFILE=$(mktemp);
+WUSERKEYFILE=$(mktemp);
 NODEKEYFILE=$(mktemp);
 
 SEED_PHRASE="$0";
@@ -57,8 +59,11 @@ WALLET_PRIVATE_KEY=$(tail -n1 "$WALLET_KEYS_FILE")
 __echo_yellow_bold "✔️ Nillion cluster is UP!"
 sleep 5
 
-"$USER_KEYGEN" --seed "this is a test" "$USERKEYFILE"
-__echo_yellow_bold "⚠️ dumped userkey to [$USERKEYFILE]"
+"$USER_KEYGEN" --seed "this is the reader key" "$RUSERKEYFILE"
+__echo_yellow_bold "⚠️ dumped userkey to [$RUSERKEYFILE]"
+
+"$USER_KEYGEN" --seed "this is the writer key" "$WUSERKEYFILE"
+__echo_yellow_bold "⚠️ dumped userkey to [$WUSERKEYFILE]"
 
 "$NODE_KEYGEN" "$NODEKEYFILE"
 __echo_yellow_bold "⚠️ dumped nodekey to [$NODEKEYFILE]"
@@ -71,7 +76,7 @@ for program_file in "$TARGET_ENV_FILE_PATH"/programs/*.bin; do
 	
 	__echo_yellow_bold "XXXX $program_file [$program_name] is loading..."
 	"$NIL_CLI" \
-	  --listen-address 127.0.0.1:0 --user-key-path "$USERKEYFILE" \
+	  --listen-address 127.0.0.1:0 --user-key-path "$WUSERKEYFILE" \
 	  --node-key-path "$NODEKEYFILE" -b "$BOOT_MULTIADDR" \
 	  --payments-private-key "$WALLET_PRIVATE_KEY" \
 	  --blockchain-config-path "$PAYMENTS_CONFIG_FILE" \
@@ -90,7 +95,8 @@ done
 
 jq -n \
     --arg nodekey "$NODEKEYFILE" \
-    --arg userkey "$USERKEYFILE" \
+    --arg ruserkey "$RUSERKEYFILE" \
+    --arg wuserkey "$WUSERKEYFILE" \
     --arg bootnode "$BOOT_MULTIADDR_WS" \
     --arg cluster "$CLUSTER_ID" \
     --arg blockchain_rpc_endpoint "$PAYMENTS_RPC" \
@@ -117,7 +123,8 @@ jq -n \
 		  },
       "keypath": {
         "node": $nodekey,
-        "user": $userkey,
+        "ruser": $ruserkey,
+        "wuser": $wuserkey,
       },
 			$programs
     }' >"$TARGET_ENV_FILE_PATH/local.json"

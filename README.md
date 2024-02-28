@@ -7,7 +7,9 @@
 
 ### Current SDK
 
-**release_version "v2024-02-06-0c6f3bec2"**
+**release_version photon-v1.0.0-rc.4**
+
+> Note: testnet is undergoing maintenance
 
 # Getting Started
 
@@ -27,10 +29,11 @@
 
 | Client  | Version  | Local | Remote (Testnet) |  Path |
 |:--------|:--------:|:-----:|:----------------:|:-----:|
-| Python 3.7+                                                                                   | v2024-02-06-0c6f3bec2 | ✅ | ⭕ | [py-client/compute-basic](py-client/compute-basic) |
-| Python 3.7+                                                                                   | v2024-02-06-0c6f3bec2 | ⭕ | ⭕ | [py-client/compute-with-permissions](py-client/compute-with-permissions) |
-| Javascript ([recent chrome](https://developer.chrome.com/blog/enabling-shared-array-buffer/)) | v2024-02-06-0c6f3bec2 | ✅ | ❌ | [js-client/jasmine-test](js-client/jasmine-test) |
-| Javascript ([recent chrome](https://developer.chrome.com/blog/enabling-shared-array-buffer/)) | v2024-02-06-0c6f3bec2 | ⭕ | ⭕ | [js-client/react-webpack-puppeteer-test](js-client/react-webpack-puppeteer-test) |
+| Python 3.7+                                                                                   | photon-v1.0.0-rc.4 | ✅ | ⭕ | [py-client/compute-basic](py-client/compute-basic) |
+| Python 3.7+                                                                                   | photon-v1.0.0-rc.4 | ⭕ | ⭕ | [py-client/compute-with-permissions](py-client/compute-with-permissions) |
+| Javascript ([recent chrome](https://developer.chrome.com/blog/enabling-shared-array-buffer/)) | photon-v1.0.0-rc.4 | ✅ | ⭕ | [js-client/basic-html](js-client/basic-html) |
+| Javascript ([recent chrome](https://developer.chrome.com/blog/enabling-shared-array-buffer/)) | photon-v1.0.0-rc.4 | ✅ | ⭕ | [js-client/jasmine-test](js-client/jasmine-test) |
+| Javascript ([recent chrome](https://developer.chrome.com/blog/enabling-shared-array-buffer/)) | photon-v1.0.0-rc.4 | ✅ (interactive) | ⭕ | [js-client/react-webpack-puppeteer-test](js-client/react-webpack-puppeteer-test) |
 
 # Tools
 

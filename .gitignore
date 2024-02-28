@@ -306,3 +306,5 @@ permissions/.nillion-config.json
 .DS_Store
 
 py-client/compute-basic/programs/
+
+local.json
