@@ -23,7 +23,7 @@ async def main():
     )
 
     nodekey = py_nillion_client.NodeKey.from_file(config['keypath']['node'])
-    userkey = py_nillion_client.UserKey.from_file(config['keypath']['user'])
+    userkey = py_nillion_client.UserKey.from_file(config['keypath']['wuser'])
 
     # Create Nillion Client
     client = py_nillion_client.NillionClient(

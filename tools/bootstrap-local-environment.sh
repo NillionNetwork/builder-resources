@@ -8,8 +8,8 @@ ENV_DIR=$(mktemp -d);
 if [[ -n "${VIRTUAL_ENV:-}" ]]; then
   deactivate
 fi
-python3 -m pip install --user virtualenv >/dev/null 2>&1
-virtualenv -p python3 "$ENV_DIR" >/dev/null 2>&1
+python -m pip install --user virtualenv >/dev/null 2>&1
+virtualenv -p python "$ENV_DIR" >/dev/null 2>&1
 # shellcheck disable=SC1091
 source "$ENV_DIR/bin/activate" >/dev/null 2>&1
 
@@ -26,6 +26,10 @@ PYNADAC="$(discover_sdk_bin_path pynadac)"
 
 for var in PYNADAC RUN_LOCAL_CLUSTER USER_KEYGEN NODE_KEYGEN NIL_CLI; do
   printf "ℹ️ found bin %-18s -> [${!var:?Failed to discover $var}]\n" "$var"
+done
+
+for var in anvil curl jq pip; do
+  ensure_available "$var"
 done
 
 PYNADAC_COMPILE_ARTIFACTS=$(mktemp -d)
@@ -70,7 +74,7 @@ __echo_yellow_bold "⚠️ dumped nodekey to [$NODEKEYFILE]"
 
 __echo_yellow_bold "⚠️ loading Nillion programs; dumping to [$PROGRAMINFO]"
 declare -A programs_map
-for program_file in "$TARGET_ENV_FILE_PATH"/programs/*.bin; do
+for program_file in "$PYNADAC_COMPILE_ARTIFACTS"/programs/*.bin; do
 	program_name="$(basename "$program_file")"
 	program_name="${program_name%%.*}"
 	

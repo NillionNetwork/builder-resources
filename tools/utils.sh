@@ -18,6 +18,16 @@ function install_nada_dsl() {
   __nillion_pip_install "nada_dsl-*-any.whl"
 }
 
+function ensure_available() {
+  
+  if ! command -v "$1" > /dev/null; then
+    echo "${1} was not found in PATH. Check system installs" 1>&2
+    exit 1
+  else
+    printf "ℹ️ found bin %-18s -> [$(which $1)]\n" "$1"
+  fi
+}
+
 function discover_sdk_bin_path() {
   
   BINPATH=$(find -L "$NILLION_SDK_ROOT" -name "$1" -type f -print | head -n1)
