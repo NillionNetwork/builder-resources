@@ -15,9 +15,7 @@
 
 🚀🚀 Visit the [Nillion Docs Repository](https://nillion.gitbook.io/docs/D7EurBeioQRXZMzb41z3/welcome-to-nillions-docs) where you can find all the latest up-to-date technical documentation, concepts and resources.
 
-# Using these examples
-
-## Setting up your system:
+# Setting up your system for this repo:
 
 1. Download your SDK files - see [Releases](https://github.com/nillion-oss/builder-resources/releases) over there 👉
 2. Unpack them to a convenient location (but not in this repo)
@@ -27,7 +25,12 @@
 export NILLION_SDK_ROOT=/home/ubuntu/Desktop/nillion/sdk
 ```
 
-## Running test examples
+The files should looks something like this:
+
+![image](https://github.com/nillion-oss/builder-resources/assets/33910651/9069f2b6-7f01-4c4e-b17c-1e6f2c840451)
+
+
+# Running examples in this repo
 
 Then for the tests, each corresponding README file will give exact instructions but follow this general pattern:
 
