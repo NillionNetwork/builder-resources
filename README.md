@@ -19,7 +19,7 @@
 
 ## Setting up your system:
 
-1. Download your SDK files (see Releases over there 👉)
+1. Download your SDK files - see [Releases](https://github.com/nillion-oss/builder-resources/releases) over there 👉
 2. Unpack them to a convenient location (but not in this repo)
 3. Uncompress the `bins` file that corresponds to your system's architecture
 4. Set the environment variable to point to the top of the SDK directory (adjust for your filesystem)
@@ -33,7 +33,7 @@ Then for the tests, each corresponding README file will give exact instructions 
 
 1. Make sure you export the SDK location in `NILLION_SDK_ROOT`
 2. Kick off the bootstrap script which will place the generated config file in the directory of your choosing
-2a. Note: This will start the anvil blockchain and Nillion run-local-cluster daemons in the background
+> Note: This will start the anvil blockchain and Nillion run-local-cluster daemons in the background
 3. Chdir to the test directory and launch the test
 
 
