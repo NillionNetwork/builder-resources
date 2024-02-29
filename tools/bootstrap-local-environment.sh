@@ -18,6 +18,8 @@ source "$ENV_DIR/bin/activate" >/dev/null 2>&1
 # shellcheck source=./utils.sh
 source "$THIS_SCRIPT_DIR/utils.sh"
 
+nillion_check_min_system_resources
+
 RUN_LOCAL_CLUSTER="$(discover_sdk_bin_path run-local-cluster)"
 NIL_CLI="$(discover_sdk_bin_path nil-cli)"
 USER_KEYGEN=$(discover_sdk_bin_path user-keygen)

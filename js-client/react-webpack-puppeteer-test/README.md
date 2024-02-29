@@ -1,3 +1,8 @@
+# 🔥 🥵 This test is kinda broken and kinda workin' 🫠
+
+There's a known issue of panics happening in the client subsystem that signal failure. The calls do, however, 
+complete so it is possible to build on this example.
+
 # How to run test
 
 ## 1. start your test cluster
