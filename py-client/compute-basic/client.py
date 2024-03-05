@@ -10,20 +10,22 @@ with open(os.path.join(SCRIPT_DIR, "local.json"), "r") as fp:
 
 
 async def main():
-    bootnodes = config['bootnodes']
-    cluster_id = config['cluster_id']
-    program_id = config['programs']['basic']
+    bootnodes = config["bootnodes"]
+    cluster_id = config["cluster_id"]
+    program_id = config["programs"]["basic"]
 
     payments_config = py_nillion_client.PaymentsConfig(
-        config['payments_config']['rpc_endpoint'],
-        config['payments_config']['signer']['wallet']['private_key'],
-        int(config['payments_config']['signer']['wallet']['chain_id']),
-        config['payments_config']['smart_contract_addresses']['payments'],
-        config['payments_config']['smart_contract_addresses']['blinding_factors_manager'],
+        config["payments_config"]["rpc_endpoint"],
+        config["payments_config"]["signer"]["wallet"]["private_key"],
+        int(config["payments_config"]["signer"]["wallet"]["chain_id"]),
+        config["payments_config"]["smart_contract_addresses"]["payments"],
+        config["payments_config"]["smart_contract_addresses"][
+            "blinding_factors_manager"
+        ],
     )
 
-    nodekey = py_nillion_client.NodeKey.from_file(config['keypath']['node'])
-    userkey = py_nillion_client.UserKey.from_file(config['keypath']['wuser'])
+    nodekey = py_nillion_client.NodeKey.from_file(config["keypath"]["node"])
+    userkey = py_nillion_client.UserKey.from_file(config["keypath"]["wuser"])
 
     # Create Nillion Client
     client = py_nillion_client.NillionClient(
@@ -31,7 +33,7 @@ async def main():
         bootnodes,
         py_nillion_client.ConnectionMode.relay(),
         userkey,
-        payments_config
+        payments_config,
     )
 
     # SecretInteger as in my_program
@@ -40,7 +42,13 @@ async def main():
     # SecretInteger as in my_program
     my_int2 = py_nillion_client.SecretInteger(24)
 
-    to_be_store_secrets = py_nillion_client.Secrets({"my_int1": my_int1})
+    my_blob1 = py_nillion_client.SecretBlob(
+        bytearray("this is a test blob".encode("utf-8"))
+    )
+
+    to_be_store_secrets = py_nillion_client.Secrets(
+        {"my_int1": my_int1, "my_blob1": my_blob1}
+    )
 
     # We bind the storage of the secret to the circuit and the concrete party
     bindings = py_nillion_client.ProgramBindings(program_id)
