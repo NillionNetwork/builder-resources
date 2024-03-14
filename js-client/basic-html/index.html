@@ -5,8 +5,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Wasm Bindgen Example</title>
+  <link href="style.css" rel="stylesheet" />
+
   <script type="module">
     import * as nillion from "./node_modules/@nillion/nillion-client-js-browser/nillion_client_js_browser.js";
+
+    function decodeByteArrays(byteArrays) {
+      return byteArrays.map((array) =>
+        String.fromCharCode.apply(null, array),
+      );
+    }
 
     async function runApp() {
       console.log(`run the default init`);
@@ -20,31 +28,85 @@
         throw new Error("FATAL: loading local.json config");
       }
       let config = await response.json();
+      document.getElementById("bootnode").textContent = config.bootnodes_ws;
 
       var userkey = nillion.UserKey.generate();
-      var nodekey = nillion.NodeKey.from_seed("this is a test");
-      const client = new nillion.WasmNillionClient(
+      var nodekey = nillion.NodeKey.from_seed("test-seed-0");
+      const client = new nillion.NillionClient(
         userkey,
         nodekey,
-        config.bootnodes,
+        config.bootnodes_ws,
         false,
         config.payments_config,
       );
-      const status = await client.cluster_information(config.cluster_id);
-      console.log(`here is the cluster status result:`);
-      console.log(JSON.stringify(status, null, 4));
 
       const party_id = await client.party_id();
-      document.getElementById('content').textContent = party_id;
-    }
+      document.getElementById("partyid").textContent = party_id;
+
+      const status = await client.cluster_information(config.cluster_id);
+      document.getElementById("clusterinfo").textContent = JSON.stringify(status, null, 4);
+
+      const encoder = new TextEncoder();
+      const encoded = await nillion.encode_blob_secret("secret-blob", {
+        bytes: encoder.encode("this is a test"),
+      });
+
+      const secrets = new nillion.Secrets();
+      await secrets.insert(encoded);
+      try {
+        let result = await client.store_secrets(config.cluster_id, secrets);
+        document.getElementById("storeid").textContent = result;
+      }
+      catch {
+        var element = document.getElementById("storeid");
+        element.textContent = '🚨 ERROR - see console for details';
+        element.classList.add('error');
+      }
+    };
     runApp();
   </script>
 </head>
 
 <body>
-  <h1>WASM Bindgen Example</h1>
-  <p>Check the console for output from the WebAssembly module.</p>
-  <p id="content">Loading party id...</p>
+  <header>
+    <h1>WASM Bindgen Example</h1>
+    <p>Check the console for output from the WebAssembly module.</p>
+  </header>
+
+  <table border="1">
+    <tr>
+      <th>Bootnode Address</th>
+      <td>
+        <p id="bootnode">
+          <blink><i>pending...</i></blink>
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <th>My Party ID</th>
+      <td>
+        <p id="partyid">
+          <blink><i>pending...</i></blink>
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <th>Store ID</th>
+      <td>
+        <p id="storeid">
+          <blink><i>pending...</i></blink>
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <th>Cluster Info</th>
+      <td>
+        <textarea rows=20 readonly id="clusterinfo">
+          <blink><i>pending...</i></blink>
+          </p>
+      </td>
+    </tr>
+  </table>
 </body>
 
 </html>
