@@ -13,7 +13,7 @@
 
 # Getting Started
 
-🚀🚀 Visit the [Nillion Docs Repository](https://nillion.gitbook.io/docs/D7EurBeioQRXZMzb41z3/welcome-to-nillions-docs) where you can find all the latest up-to-date technical documentation, concepts and resources.
+🚀🚀 Visit the [Nillion Docs Repository](https://docs.nillion.com) where you can find all the latest up-to-date technical documentation, concepts and resources.
 
 # Setting up your system for this repo:
 
