@@ -7,7 +7,7 @@
 
 ### Current SDK
 
-**release_version photon-v1.0.0-rc.4**
+**release_version v2024-03-12-d2d0a82c8**
 
 > Note: testnet is undergoing maintenance
 
@@ -54,11 +54,11 @@ Then for the tests, each corresponding README file will give exact instructions 
 
 | Client  | Version  | Local | Remote (Testnet) |  Path |
 |:--------|:--------:|:-----:|:----------------:|:-----:|
-| Python 3.7+                                                                                   | photon-v1.0.0-rc.4 | ✅ | ⭕ | [py-client/compute-basic](py-client/compute-basic) |
-| Python 3.7+                                                                                   | photon-v1.0.0-rc.4 | ✅ | ⭕ | [py-client/compute-with-permissions](py-client/compute-with-permissions) |
-| Javascript ([recent chrome](https://developer.chrome.com/blog/enabling-shared-array-buffer/)) | photon-v1.0.0-rc.4 | ✅ | ⭕ | [js-client/basic-html](js-client/basic-html) |
-| Javascript ([recent chrome](https://developer.chrome.com/blog/enabling-shared-array-buffer/)) | photon-v1.0.0-rc.4 | ✅ | ⭕ | [js-client/jasmine-test](js-client/jasmine-test) |
-| Javascript ([recent chrome](https://developer.chrome.com/blog/enabling-shared-array-buffer/)) | photon-v1.0.0-rc.4 | ✅ (see readme) | ⭕ | [js-client/react-webpack-puppeteer-test](js-client/react-webpack-puppeteer-test) |
+| Python 3.7+                                                                                   | v2024-03-12-d2d0a82c8 | ✅ | ⭕ | [py-client/compute-basic](py-client/compute-basic) |
+| Python 3.7+                                                                                   | v2024-03-12-d2d0a82c8 | ✅ | ⭕ | [py-client/compute-with-permissions](py-client/compute-with-permissions) |
+| Javascript ([recent chrome](https://developer.chrome.com/blog/enabling-shared-array-buffer/)) | v2024-03-12-d2d0a82c8 | ✅ | ⭕ | [js-client/basic-html](js-client/basic-html) |
+| Javascript ([recent chrome](https://developer.chrome.com/blog/enabling-shared-array-buffer/)) | v2024-03-12-d2d0a82c8 | ✅ | ⭕ | [js-client/jasmine-test](js-client/jasmine-test) |
+| Javascript ([recent chrome](https://developer.chrome.com/blog/enabling-shared-array-buffer/)) | v2024-03-12-d2d0a82c8 | ✅ (see readme) | ⭕ | [js-client/react-webpack-puppeteer-test](js-client/react-webpack-puppeteer-test) |
 
 # Tools
 
