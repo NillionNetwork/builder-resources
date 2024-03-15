@@ -1,5 +1,5 @@
 {
-  "bootnodes": [
+  "bootnodes_ws": [
     "/ip4/127.0.0.1/tcp/37989/ws/p2p/12D3KooWJxLf4rYoJE5mRSncXehgTqgcqnS3gxPMg6W46zJAoKiK"
   ],
   "cluster_id": "2e2347d2-d079-415f-ba91-b065448e56b3",

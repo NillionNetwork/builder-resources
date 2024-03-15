@@ -24,17 +24,17 @@ const Compute: React.FC<ComputeProps> = () => {
     console.log(party_id);
 
     try {
-      console.log(`>>> new WasmProgramBindings ${config.programs.simple_mult}`);
-      let program_bindings = new nillion.WasmProgramBindings(
+      console.log(`>>> new ProgramBindings ${config.programs.simple_mult}`);
+      let program_bindings = new nillion.ProgramBindings(
         config.programs.simple_mult,
       );
-      console.log(`<<< new WasmProgramBindings ${config.programs.simple_mult}`);
-      console.log(`>>> adding party bindings to WasmProgramBindings`);
+      console.log(`<<< new ProgramBindings ${config.programs.simple_mult}`);
+      console.log(`>>> adding party bindings to ProgramBindings`);
       program_bindings.add_input_party("Dealer", party_id);
-      console.log(`<<< adding party bindings to WasmProgramBindings`);
+      console.log(`<<< adding party bindings to ProgramBindings`);
 
       console.log(`>>> adding store_secrets from config`);
-      const store_secrets = new nillion.NilSecrets();
+      const store_secrets = new nillion.Secrets();
       for (let secret_id of Object.keys(config.store_secrets)) {
         console.log(`>>>--> secret_id: ${secret_id}`);
         if (config.store_secrets[secret_id].hasOwnProperty("BigUint")) {
@@ -51,25 +51,25 @@ const Compute: React.FC<ComputeProps> = () => {
         }
       }
       console.log(`>>> client.store with program binding`);
-      let store_id = await client.store(
+      let store_id = await client.store_secrets(
         config.cluster_id,
         store_secrets,
         program_bindings,
       );
       console.log(`<<< client.store: ${store_id}`);
 
-      console.log(`>>> new WasmProgramBindings ${config.programs.simple_mult}`);
-      program_bindings = new nillion.WasmProgramBindings(
+      console.log(`>>> new ProgramBindings ${config.programs.simple_mult}`);
+      program_bindings = new nillion.ProgramBindings(
         config.programs.simple_mult,
       );
-      console.log(`<<< new WasmProgramBindings ${config.programs.simple_mult}`);
-      console.log(`>>> adding party bindings to WasmProgramBindings`);
+      console.log(`<<< new ProgramBindings ${config.programs.simple_mult}`);
+      console.log(`>>> adding party bindings to ProgramBindings`);
       program_bindings.add_input_party("Dealer", party_id);
       program_bindings.add_output_party("Result", party_id);
-      console.log(`<<< adding party bindings to WasmProgramBindings`);
+      console.log(`<<< adding party bindings to ProgramBindings`);
 
       console.log(`>>> adding compute_secrets from config`);
-      const compute_secrets = new nillion.NilSecrets();
+      const compute_secrets = new nillion.Secrets();
       for (let secret_id of Object.keys(config.compute_secrets)) {
         if (config.compute_secrets[secret_id].hasOwnProperty("BigUint")) {
           const encoded = await nillion.encode_unsigned_integer_secret(

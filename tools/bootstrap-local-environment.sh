@@ -103,7 +103,8 @@ jq -n \
     --arg nodekey "$NODEKEYFILE" \
     --arg ruserkey "$RUSERKEYFILE" \
     --arg wuserkey "$WUSERKEYFILE" \
-    --arg bootnode "$BOOT_MULTIADDR_WS" \
+    --arg bootnode "$BOOT_MULTIADDR" \
+    --arg bootnode_ws "$BOOT_MULTIADDR_WS" \
     --arg cluster "$CLUSTER_ID" \
     --arg blockchain_rpc_endpoint "$PAYMENTS_RPC" \
     --argjson chain_id "$PAYMENTS_CHAIN" \
@@ -113,6 +114,7 @@ jq -n \
     --arg wallet_private_key "$WALLET_PRIVATE_KEY" \
     '{
 		  "bootnodes": [$bootnode],
+		  "bootnodes_ws": [$bootnode_ws],
 		  "cluster_id": $cluster,
 		  "payments_config": {
 		    "rpc_endpoint": $blockchain_rpc_endpoint,

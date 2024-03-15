@@ -3,6 +3,8 @@ THIS_SCRIPT_DIR="$(dirname "$0")"
 source "$THIS_SCRIPT_DIR/utils.sh"
 
 
+PATH_TO_CONFIG="$(realpath "$THIS_SCRIPT_DIR/../resources/remote/config.json")"
+
 function command_help {
   cat <<EOF >&2
 
@@ -26,6 +28,12 @@ function report_status() {
   echo >&2 -e "\033[33m in $ELAPSED_TIME seconds\033[0m"
 }
 
+function __conf () {
+  local query
+  query="$1"
+  jq -r "$query" "$PATH_TO_CONFIG"
+}
+
 function setup() {
   NODE_KEY_PATH="$1"
   if [[ ! -e "$NODE_KEY_PATH" ]]; then
@@ -40,10 +48,10 @@ function setup() {
   SEED_PHRASE="nillion-testnet-seed-1"
 
   # Parse Terraform outputs.
-  CLUSTER_ID=$(jq -r '.clusters[0].id' "$THIS_SCRIPT_DIR"/../resources/remote/config.json)
+  CLUSTER_ID="$(__conf '.cluster_id')"
   test "$CLUSTER_ID" != "null" || { echo "Error: CLUSTER_ID is null"; return 1; }
 
-  BOOTNODE=$(jq -r '.bootnodes[0]' "$THIS_SCRIPT_DIR"/../resources/remote/config.json)
+  BOOTNODE="$(__conf '.bootnodes[0]')"
   BOOTNODE_HOST=$(awk -F'/' '{print $3}' <<<"$BOOTNODE")
   test "$BOOTNODE_HOST" != "null" || { echo "Error: BOOTNODE_HOST is null"; return 1; }
 
@@ -51,7 +59,7 @@ function setup() {
   test "$BOOTNODE_ID" != "null" || { echo "Error: BOOTNODE_ID is null"; return 1; }
 
   PAYMENTS_CONFIG_PATH=$(mktemp)
-  jq -r '.payments' "$THIS_SCRIPT_DIR"/../resources/remote/config.json >"$PAYMENTS_CONFIG_PATH"
+  __conf '.payments_config' >"$PAYMENTS_CONFIG_PATH"
 
   USER_KEY_PATH="$(mktemp)"
 
@@ -153,9 +161,7 @@ if [ $ERRORS -gt 0 ]; then
 else
   echo -e "\033[32mOK\033[0m"
   __echo_yellow_bold "✔️ Nillion cluster is VALIDATED!"
-  rm "$USER_KEY_PATH"
-  rm "$NODE_KEY_PATH"
-  rm "${LOG_DIR:?}"/*
-  rmdir "$LOG_DIR"
+  #rm "${LOG_DIR:?}"/*
+  #rmdir "$LOG_DIR"
   exit 0
 fi

@@ -35,10 +35,10 @@ export const NillionContextProvider = (props) => {
         // active on port 11100
         // You can launch a listener with a simple tool like https://github.com/vi/websocat
         // $ websocat -s 11100 | tee /tmp/wasm.log
-        const wasmclient = new nil.WasmNillionClient(
+        const wasmclient = new nil.NillionClient(
           userkey,
           nodekey,
-          config.bootnodes,
+          config.bootnodes_ws,
           false,
           config.payments_config,
         );

@@ -1,6 +1,6 @@
 {
-  "payments": {
-    "rpc_endpoint": "https://rpc-endpoint.testnet-photon.nilogy.xyz/",
+  "payments_config": {
+    "rpc_endpoint": "https://rpc-endpoint.testnet-fe.nilogy.xyz",
     "signer": {
       "wallet": {
         "chain_id": 22255222,
@@ -13,12 +13,13 @@
     }
   },
   "bootnodes": [
-    "/dns/node-1.testnet-photon.nillion-network.nilogy.xyz/tcp/14111/p2p/12D3KooWCfFYAb77NCjEk711e9BVe2E6mrasPZTtAjJAPtVAdbye",
-    "/dns/node-2.testnet-photon.nillion-network.nilogy.xyz/tcp/14111/p2p/12D3KooWCcii8jb8ggJH8e3YeYFrKhrskc4NpxEEuTH6r2Zxg4Av"
+    "/dns/node-1.testnet-fe.nillion-network.nilogy.xyz/tcp/14111/p2p/12D3KooWNbB2dobuVpH5qetmWnamsKr1G9rC5Sbvj2UsMt3jvQxK",
+    "/dns/node-2.testnet-fe.nillion-network.nilogy.xyz/tcp/14111/p2p/12D3KooWHuSKUJyDZsZf1WVLbjstej6yrcj1Wm1SspvFTKYiLY4J"
   ],
-  "clusters": [
-    {
-      "id": "b13880d3-dde8-4a75-a171-8a1a9d985e6c"
-    }
-  ]
+  "cluster_id": "f592f8ea-7651-4ab8-b692-ef149b783dc9",
+  "keypath": {
+    "node": "/home/bionik/nillion-node.key",
+    "wuser": "/home/bionik/nillion-user-key",
+    "ruser": "/home/bionik/nillion-user-key-2"
+  }
 }

@@ -22,7 +22,7 @@ const Store: React.FC<StoreProps> = () => {
     console.log(`starting client.store of: ${resultBytes.byteLength} bytes`);
 
     try {
-      const collection = new nillion.NilSecrets();
+      const collection = new nillion.Secrets();
       const encoded = await nillion.encode_blob_secret(
         `My Secrets ID`,
         {
@@ -33,12 +33,12 @@ const Store: React.FC<StoreProps> = () => {
       console.log(
         `going to start store of string [${content.current?.value}] to cluster: ${config.cluster_id}`,
       );
-      let result = await client.store(config.cluster_id, collection);
+      let result = await client.store_secrets(config.cluster_id, collection);
       console.log(`DONE`);
 
       setRetrievalCode(result);
       console.log(`client.store ID: ${result}`);
-      console.log(`finished client.store`);
+      console.log(`finished client.store_secrets`);
     } catch (error) {
       console.log(`ERROR`);
       console.log(JSON.stringify(error, null, 4));

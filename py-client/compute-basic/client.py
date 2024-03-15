@@ -1,3 +1,4 @@
+from pdb import set_trace as bp
 import asyncio
 import json
 import os
@@ -12,7 +13,6 @@ with open(os.path.join(SCRIPT_DIR, "local.json"), "r") as fp:
 async def main():
     bootnodes = config["bootnodes"]
     cluster_id = config["cluster_id"]
-    program_id = config["programs"]["basic"]
 
     payments_config = py_nillion_client.PaymentsConfig(
         config["payments_config"]["rpc_endpoint"],
@@ -42,15 +42,16 @@ async def main():
     # SecretInteger as in my_program
     my_int2 = py_nillion_client.SecretInteger(24)
 
-    my_blob1 = py_nillion_client.SecretBlob(
-        bytearray("this is a test blob".encode("utf-8"))
-    )
+    # my_blob1 = py_nillion_client.SecretBlob(
+    #     bytearray("this is a test blob".encode("utf-8"))
+    # )
 
     to_be_store_secrets = py_nillion_client.Secrets(
-        {"my_int1": my_int1, "my_blob1": my_blob1}
+        {"my_int1": my_int1 }
     )
 
     # We bind the storage of the secret to the circuit and the concrete party
+    program_id = config["programs"]["basic"]
     bindings = py_nillion_client.ProgramBindings(program_id)
     bindings.add_input_party("Party1", client.party_id())
     print(f"Storing secret: {to_be_store_secrets}")

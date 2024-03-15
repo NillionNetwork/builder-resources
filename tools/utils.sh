@@ -112,7 +112,7 @@ function compile_program() {
 
   pushd "$(git rev-parse --show-toplevel || echo .)/resources/programs" || exit 1
   
-  for file in *.py ; do
+  for file in basic*.py simple*.py test*.py; do
     echo "Compiling ${file} to [$TARGET_PROGRAM_PATH]"
     "$PYNADAC" --target-dir "$TARGET_PROGRAM_PATH" --generate-mir-json "${file}"
   done 

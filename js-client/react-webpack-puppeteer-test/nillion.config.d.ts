@@ -9,6 +9,7 @@ type Secrets = {
 
 declare const config: {
   bootnodes: string[];
+  bootnodes_ws: string[];
   cluster_id: string;
   compute_expected_result: string,
   compute_secrets: {

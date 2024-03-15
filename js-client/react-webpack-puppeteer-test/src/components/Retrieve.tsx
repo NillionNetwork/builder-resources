@@ -13,24 +13,24 @@ const Retrieve: React.FC<RetrieveProps> = () => {
 
   const actionRetrieve = async () => {
     const file_uuid = content.current?.value;
-    console.log(`starting client.retrieve of: ${file_uuid}`);
+    console.log(`starting client.retrieve_secret of: ${file_uuid}`);
 
     try {
       const mySecretsId = "My Secrets ID";
-      console.log(`starting client.retrieve(${file_uuid})`);
+      console.log(`starting client.retrieve_secret(${file_uuid})`);
 
-      const secret = await client.retrieve(
+      const secret = await client.retrieve_secret(
         config.cluster_id,
         file_uuid,
         mySecretsId,
       );
 
-      console.log(`client.retrieve completed`);
+      console.log(`client.retrieve_secret completed`);
       console.log(JSON.stringify(secret, null, 4));
       const result = await nillion.decode_bytearray_secret(secret);
       console.log(`decode_bytearray_secret completed`);
       console.log(`DONE`);
-      console.log(`finished client.retrieve`);
+      console.log(`finished client.retrieve_secret`);
       // console.log(JSON.stringify(result, null, 4));
       // createFileFromByteArray(result, "output.txt");
       setRetrievalCode(new TextDecoder("utf-8").decode(result));
