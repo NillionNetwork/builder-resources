@@ -4,7 +4,7 @@
     "signer": {
       "wallet": {
         "chain_id": 22255222,
-        "private_key": "b4840879641631a0231629fcb8bc0f3a6f59375d112a007c9cab6fd3b3e66dab"
+        "private_key": "2f1d0d946a974107a1290c7ccdc35b459bb85ac1ec4718271d73092128f34ca2"
       }
     },
     "smart_contract_addresses": {
@@ -12,6 +12,10 @@
       "payments": "0xc166ce8bfc56e4493ffd43a99db234a9f0413443"
     }
   },
+  "bootnodes_ws": [
+    "/dns/node-1.testnet-fe.nillion-network.nilogy.xyz/tcp/14211/wss/p2p/12D3KooWNbB2dobuVpH5qetmWnamsKr1G9rC5Sbvj2UsMt3jvQxK",
+    "/dns/node-2.testnet-fe.nillion-network.nilogy.xyz/tcp/14211/wss/p2p/12D3KooWHuSKUJyDZsZf1WVLbjstej6yrcj1Wm1SspvFTKYiLY4J"
+  ],
   "bootnodes": [
     "/dns/node-1.testnet-fe.nillion-network.nilogy.xyz/tcp/14111/p2p/12D3KooWNbB2dobuVpH5qetmWnamsKr1G9rC5Sbvj2UsMt3jvQxK",
     "/dns/node-2.testnet-fe.nillion-network.nilogy.xyz/tcp/14111/p2p/12D3KooWHuSKUJyDZsZf1WVLbjstej6yrcj1Wm1SspvFTKYiLY4J"

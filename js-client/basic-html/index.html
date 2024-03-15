@@ -44,7 +44,11 @@
       document.getElementById("partyid").textContent = party_id;
 
       const status = await client.cluster_information(config.cluster_id);
-      document.getElementById("clusterinfo").textContent = JSON.stringify(status, null, 4);
+      document.getElementById("clusterinfo").textContent = JSON.stringify(
+        status,
+        null,
+        4,
+      );
 
       const encoder = new TextEncoder();
       const encoded = await nillion.encode_blob_secret("secret-blob", {
@@ -56,13 +60,12 @@
       try {
         let result = await client.store_secrets(config.cluster_id, secrets);
         document.getElementById("storeid").textContent = result;
-      }
-      catch {
+      } catch {
         var element = document.getElementById("storeid");
-        element.textContent = '🚨 ERROR - see console for details';
-        element.classList.add('error');
+        element.textContent = "🚨 ERROR - see console for details";
+        element.classList.add("error");
       }
-    };
+    }
     runApp();
   </script>
 </head>
@@ -101,9 +104,7 @@
     <tr>
       <th>Cluster Info</th>
       <td>
-        <textarea rows=20 readonly id="clusterinfo">
-          <blink><i>pending...</i></blink>
-          </p>
+        <textarea rows="20" readonly id="clusterinfo"> pending... </textarea>
       </td>
     </tr>
   </table>
