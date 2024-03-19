@@ -12,7 +12,9 @@ window.jasmine.DEFAULT_TIMEOUT_INTERVAL = 500;
 async function new_nillion_client(config) {
   await nillion.default();
 
-  var user_key = nillion.UserKey.generate();
+  var user_key = nillion.UserKey.from_seed(
+    "this is the writer key"
+  );
   var node_key = nillion.NodeKey.from_seed(
     "test-seed-0",
   );
@@ -51,6 +53,7 @@ describe("Nillion Client", () => {
     context.test1 = {
       expected_party_id: "12D3KooWMG9FbK6gDYMBJxJk9S4m9AK69r5G3XLJM2CtkKGurjKc",
       input: "this is a test",
+      input_2: "this is a second test",
     };
   });
 
@@ -119,6 +122,35 @@ describe("Nillion Client", () => {
     expect(result_decoded).toBe(context.test1.input);
   });
 
+  it("should be able to encode a second blob secret (string)", async () => {
+    const resultBytes = strToByteArray(context.test1.input_2);
+    const encoded = await nillion.encode_blob_secret(
+      "secret-blob",
+      { bytes: resultBytes },
+    );
+    expect(encoded).toBeDefined();
+    context.test1.input_encoded_str_2 = encoded;
+    expect(encoded).toBeInstanceOf(nillion.Secret);
+  });
+
+  it("should be able to push a second blob secret to Secrets", async () => {
+    const secrets = new nillion.Secrets();
+    expect(secrets).toBeInstanceOf(nillion.Secrets);
+    expect(secrets).toBeDefined();
+    await secrets.insert(context.test1.input_encoded_str_2);
+    context.test1.secrets_2 = secrets;
+  });
+
+  it("should be able to store a second Secrets", async () => {
+    let result = await context.client.store_secrets(
+      context.config.cluster_id,
+      context.test1.secrets_2,
+    );
+    expect(result).toBeDefined();
+    expect(result).not.toBe("");
+    context.test1.store_result_2 = result;
+  }, 20000);
+
   it("should be able to create a program binding", async () => {
     context.it_requires_programs();
     expect(context.config.programs.simple_mult).toBeDefined();
@@ -178,6 +210,7 @@ describe("Nillion Client", () => {
     "should be able to prep stored compute secrets: [simple_mult]",
     async () => {
       context.it_requires_programs();
+
       const my_secrets = new nillion.Secrets();
       await encode_and_insert(my_secrets, `I03`, 2877);
       await encode_and_insert(my_secrets, `I04`, 2564);
@@ -185,6 +218,8 @@ describe("Nillion Client", () => {
       const bindings = new nillion.ProgramBindings(
         context.config.programs.simple_mult,
       );
+      expect(bindings).toBeDefined();
+
       bindings.add_input_party("Dealer", context.test1.party_id);
       bindings.add_output_party("Result", context.test1.party_id);
 
