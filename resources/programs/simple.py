@@ -2,18 +2,14 @@ from nada_dsl import *
 
 
 def nada_main():
-    dealer = Party(name="Dealer")
-    result = Party(name="Result")
+    party1 = Party(name="Party1")
+    A = SecretInteger(Input(name="A", party=party1))
+    B = SecretInteger(Input(name="B", party=party1))
+    C = SecretInteger(Input(name="C", party=party1))
+    D = SecretInteger(Input(name="D", party=party1))
 
-    I00 = SecretUnsignedInteger(Input(name="I00", party=dealer))
-    I01 = SecretUnsignedInteger(Input(name="I01", party=dealer))
-    I02 = SecretUnsignedInteger(Input(name="I02", party=dealer))
-    I03 = SecretUnsignedInteger(Input(name="I03", party=dealer))
-    I04 = SecretUnsignedInteger(Input(name="I04", party=dealer))
+    TMP1 = A * B
+    TMP2 = C * D
+    O = TMP1 + TMP2
 
-    Mul0 = I00 * I01
-    Mul1 = Mul0 * I02
-    Mul2 = I03 * I04
-    Add0 = Mul1 + Mul2
-
-    return [Output(Add0, "Add0", result)]
+    return [Output(O, "O", party1)]

@@ -8,8 +8,8 @@ ENV_DIR=$(mktemp -d);
 if [[ -n "${VIRTUAL_ENV:-}" ]]; then
   deactivate
 fi
-python3 -m pip install --user virtualenv >/dev/null 2>&1
-virtualenv -p python3 "$ENV_DIR" >/dev/null 2>&1
+python -m pip install --user virtualenv >/dev/null 2>&1
+virtualenv -p python "$ENV_DIR" >/dev/null 2>&1
 # shellcheck disable=SC1091
 source "$ENV_DIR/bin/activate" >/dev/null 2>&1
 
@@ -17,6 +17,8 @@ source "$ENV_DIR/bin/activate" >/dev/null 2>&1
 
 # shellcheck source=./utils.sh
 source "$THIS_SCRIPT_DIR/utils.sh"
+
+nillion_check_min_system_resources
 
 RUN_LOCAL_CLUSTER="$(discover_sdk_bin_path run-local-cluster)"
 NIL_CLI="$(discover_sdk_bin_path nil-cli)"
@@ -28,12 +30,18 @@ for var in PYNADAC RUN_LOCAL_CLUSTER USER_KEYGEN NODE_KEYGEN NIL_CLI; do
   printf "ℹ️ found bin %-18s -> [${!var:?Failed to discover $var}]\n" "$var"
 done
 
-compile_program "$TARGET_ENV_FILE_PATH"
+for var in anvil curl jq pip; do
+  ensure_available "$var"
+done
+
+PYNADAC_COMPILE_ARTIFACTS=$(mktemp -d)
+compile_program "$PYNADAC_COMPILE_ARTIFACTS"
 
 OUTFILE=$(mktemp);
 
 PROGRAMINFO=$(mktemp);
-USERKEYFILE=$(mktemp);
+RUSERKEYFILE=$(mktemp);
+WUSERKEYFILE=$(mktemp);
 NODEKEYFILE=$(mktemp);
 
 SEED_PHRASE="$0";
@@ -57,21 +65,24 @@ WALLET_PRIVATE_KEY=$(tail -n1 "$WALLET_KEYS_FILE")
 __echo_yellow_bold "✔️ Nillion cluster is UP!"
 sleep 5
 
-"$USER_KEYGEN" --seed "this is a test" "$USERKEYFILE"
-__echo_yellow_bold "⚠️ dumped userkey to [$USERKEYFILE]"
+"$USER_KEYGEN" --seed "this is the reader key" "$RUSERKEYFILE"
+__echo_yellow_bold "⚠️ dumped userkey to [$RUSERKEYFILE]"
+
+"$USER_KEYGEN" --seed "this is the writer key" "$WUSERKEYFILE"
+__echo_yellow_bold "⚠️ dumped userkey to [$WUSERKEYFILE]"
 
 "$NODE_KEYGEN" "$NODEKEYFILE"
 __echo_yellow_bold "⚠️ dumped nodekey to [$NODEKEYFILE]"
 
 __echo_yellow_bold "⚠️ loading Nillion programs; dumping to [$PROGRAMINFO]"
 declare -A programs_map
-for program_file in "$TARGET_ENV_FILE_PATH"/programs/*.bin; do
+for program_file in "$PYNADAC_COMPILE_ARTIFACTS"/programs/*.bin; do
 	program_name="$(basename "$program_file")"
 	program_name="${program_name%%.*}"
 	
 	__echo_yellow_bold "XXXX $program_file [$program_name] is loading..."
 	"$NIL_CLI" \
-	  --listen-address 127.0.0.1:0 --user-key-path "$USERKEYFILE" \
+	  --listen-address 127.0.0.1:0 --user-key-path "$WUSERKEYFILE" \
 	  --node-key-path "$NODEKEYFILE" -b "$BOOT_MULTIADDR" \
 	  --payments-private-key "$WALLET_PRIVATE_KEY" \
 	  --blockchain-config-path "$PAYMENTS_CONFIG_FILE" \
@@ -90,8 +101,10 @@ done
 
 jq -n \
     --arg nodekey "$NODEKEYFILE" \
-    --arg userkey "$USERKEYFILE" \
-    --arg bootnode "$BOOT_MULTIADDR_WS" \
+    --arg ruserkey "$RUSERKEYFILE" \
+    --arg wuserkey "$WUSERKEYFILE" \
+    --arg bootnode "$BOOT_MULTIADDR" \
+    --arg bootnode_ws "$BOOT_MULTIADDR_WS" \
     --arg cluster "$CLUSTER_ID" \
     --arg blockchain_rpc_endpoint "$PAYMENTS_RPC" \
     --argjson chain_id "$PAYMENTS_CHAIN" \
@@ -101,6 +114,7 @@ jq -n \
     --arg wallet_private_key "$WALLET_PRIVATE_KEY" \
     '{
 		  "bootnodes": [$bootnode],
+		  "bootnodes_ws": [$bootnode_ws],
 		  "cluster_id": $cluster,
 		  "payments_config": {
 		    "rpc_endpoint": $blockchain_rpc_endpoint,
@@ -117,7 +131,8 @@ jq -n \
 		  },
       "keypath": {
         "node": $nodekey,
-        "user": $userkey,
+        "ruser": $ruserkey,
+        "wuser": $wuserkey,
       },
 			$programs
     }' >"$TARGET_ENV_FILE_PATH/local.json"

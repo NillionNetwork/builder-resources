@@ -8,6 +8,35 @@ function __echo_yellow_bold {
   echo -e "\033[1;33m${1}\033[0m"
 }
 
+function nillion_check_min_system_resources () {
+  
+  # Detect number of CPUs
+  NUM_CPUS=$(grep -c ^processor /proc/cpuinfo 2>/dev/null)
+  if [ -z "$NUM_CPUS" ]; then
+    # macOS and other systems that do not support /proc/cpuinfo
+    NUM_CPUS=$(sysctl -n hw.ncpu 2>/dev/null || echo 1)
+  fi
+  
+  # Detect total memory in MB
+  MEM_TOTAL=$(grep MemTotal /proc/meminfo 2>/dev/null | awk '{print int($2/1024)}')
+  if [ -z "$MEM_TOTAL" ]; then
+    # macOS and other systems that do not support /proc/meminfo
+    MEM_TOTAL=$(sysctl -n hw.memsize 2>/dev/null | awk '{print int($1/1024/1024)}')
+  fi
+  
+  MIN_CPUS=2
+  MIN_MEM_MB=4096
+  
+  # Check if the resources are below the minimum requirements
+  if [ "$NUM_CPUS" -lt "$MIN_CPUS" ] || [ "$MEM_TOTAL" -lt "$MIN_MEM_MB" ]; then
+    __echo_red_bold "⚠️ Warning: Insufficient environment resources for your Nillion cluster. Expect problems!"
+    __echo_yellow_bold "Required minimum: $MIN_CPUS CPUs, ${MIN_MEM_MB}MB Memory"
+  else
+    echo "ℹ️ Environment resources are sufficient."
+  fi
+
+}
+
 function __nillion_pip_install() {
   WHLPATH=$(find -L "$NILLION_SDK_ROOT" -iname "$1" -type f -print | head -n1)
   echo $WHLPATH
@@ -16,6 +45,16 @@ function __nillion_pip_install() {
 
 function install_nada_dsl() {
   __nillion_pip_install "nada_dsl-*-any.whl"
+}
+
+function ensure_available() {
+  
+  if ! command -v "$1" > /dev/null; then
+    echo "${1} was not found in PATH. Check system installs" 1>&2
+    exit 1
+  else
+    printf "ℹ️ found bin %-18s -> [$(which $1)]\n" "$1"
+  fi
 }
 
 function discover_sdk_bin_path() {
@@ -42,6 +81,7 @@ function daemonize_cluster() {
   
   nohup setsid "$RUN_LOCAL_CLUSTER" --seed "$SEED_PHRASE" > "$OUTFILE" 2>&1 &
   
+  SECONDS=0
   time_limit=40
   while true; do
       # Use 'wait' to check if the log file contains the string
@@ -72,7 +112,7 @@ function compile_program() {
 
   pushd "$(git rev-parse --show-toplevel || echo .)/resources/programs" || exit 1
   
-  for file in *.py ; do
+  for file in basic*.py simple*.py test*.py; do
     echo "Compiling ${file} to [$TARGET_PROGRAM_PATH]"
     "$PYNADAC" --target-dir "$TARGET_PROGRAM_PATH" --generate-mir-json "${file}"
   done 

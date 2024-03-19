@@ -4,20 +4,20 @@
 ```bash
 # from the workspace root - this starts the cluster and places the 
 # config and program into the expected dir
-./tools/bootstrap-local-environment.sh js-client/basic-html/fixture
+./tools/bootstrap-local-environment.sh js-client/basic-html
 ```
 
-## 2. copy paste config from local.json
+## 2. install pre-requisite libraries
 ```bash
-cat fixture/local.json
-```
-
-## 3. install pre-requisite libraries
-```bash
+npm run workspace:prepare
 npm i --include=dev
 ```
 
 ## 4. Run local server
 ```bash
-npx serve
+npm run start
 ```
+
+## 5. Visit page
+
+[http://localhost:3000/](http://localhost:3000/)

@@ -1,26 +1,34 @@
-# js-client-reference
-Reference project to demonstrate usage of Nillion js client in a browser
+# 🔥 🥵 This test is kinda broken and kinda workin' 🫠
 
-## Getting started with permissions examples
+There's a known issue of panics happening in the client subsystem that signal failure. The calls do, however, 
+complete so it is possible to build on this example.
 
-### Pre-req: Nillion SDK bins
+# How to run test
 
-unpack your sdk bins to a location on your filesystem (node-keygen, user-keygen, node-key2peerid, nil-cli, program-simulator, pynadac, run-local-cluster)
+## 1. start your test cluster
+```bash
+# from the workspace root - this starts the cluster and places the 
+# config and program into the expected dir
+./tools/bootstrap-local-environment.sh js-client/react-webpack-puppeteer-test
+```
 
-### Pre-req: install cli dependencies
+## 2. install pre-requisite libraries
+```bash
+npm run workspace:prepare
+npm i --include=dev
+```
 
-- [Install grep](https://command-not-found.com/grep)
-- [Install jq](https://command-not-found.com/jq)
-- [Install node 14+](https://command-not-found.com/node)
-- [Install npm](https://command-not-found.com/npm)
-- [Install pidof](https://command-not-found.com/pidof)
-- [Install pip](https://command-not-found.com/pip)
-- [Install python 3.7+](https://command-not-found.com/python)
+## 3a. Run headless
+```bash
+npm run test:headless
+```
 
-### Running examples
+## OR 3b. Run headful
+```bash
+npm run test:headful
+```
 
-> NILLION_SDK_ROOT is the folder that contains the SDK binaries 
-```shell
-export NILLION_SDK_ROOT="/path/to/your/nillion/sdk/binaries/folder"
-./start-test.sh
+## OR 3c. Run interactive - port 9000
+```bash
+npm run start
 ```

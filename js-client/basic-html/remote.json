@@ -1,0 +1,23 @@
+{
+  "payments_config": {
+    "rpc_endpoint": "https://rpc-endpoint.testnet-fe.nilogy.xyz",
+    "signer": {
+      "wallet": {
+        "chain_id": 22255222,
+        "private_key": "b4840879641631a0231629fcb8bc0f3a6f59375d112a007c9cab6fd3b3e66dab"
+      }
+    },
+    "smart_contract_addresses": {
+      "blinding_factors_manager": "0xf66cb23aa5857ae1d34a23ce385fa78495c50c69",
+      "payments": "0xc166ce8bfc56e4493ffd43a99db234a9f0413443"
+    }
+  },
+  "bootnodes": [
+    "/dns/node-1.testnet-fe.nillion-network.nilogy.xyz/tcp/14211/wss/p2p/12D3KooWNbB2dobuVpH5qetmWnamsKr1G9rC5Sbvj2UsMt3jvQxK",
+    "/dns/node-2.testnet-fe.nillion-network.nilogy.xyz/tcp/14211/wss/p2p/12D3KooWHuSKUJyDZsZf1WVLbjstej6yrcj1Wm1SspvFTKYiLY4J"
+  ],
+  "cluster_id": "f592f8ea-7651-4ab8-b692-ef149b783dc9",
+  "programs": {
+    "basic": "HHMgS4vggxGfwULk6CNFL6FCzZ8Xu47fkyyDCyAhV1KpLcXXZ1bvx8FQv2RX48y7SFvnfzN89v93ToH4DJ7Lkvs/basic"
+  }
+}

@@ -7,13 +7,40 @@
 
 ### Current SDK
 
-**release_version "v2024-02-06-0c6f3bec2"**
+**release_version v2024-03-12-d2d0a82c8**
+
+> Note: testnet is undergoing maintenance
 
 # Getting Started
 
-🚀🚀 Visit the [Nillion Docs Repository](https://nillion.gitbook.io/docs/D7EurBeioQRXZMzb41z3/welcome-to-nillions-docs) where you can find all the latest up-to-date technical documentation, concepts and resources.
+🚀🚀 Visit the [Nillion Docs Repository](https://docs.nillion.com) where you can find all the latest up-to-date technical documentation, concepts and resources.
 
-## Demo Code Compatibility Matrix
+# Setting up your system for this repo:
+
+1. Download your SDK files - see [Releases](https://github.com/nillion-oss/builder-resources/releases) over there 👉
+2. Unpack them to a convenient location (but not in this repo)
+3. Uncompress the `bins` file that corresponds to your system's architecture
+4. Set the environment variable to point to the top of the SDK directory (adjust for your filesystem)
+```bash
+export NILLION_SDK_ROOT=/home/ubuntu/Desktop/nillion/sdk
+```
+
+The files should looks something like this:
+
+![image](https://github.com/nillion-oss/builder-resources/assets/33910651/9069f2b6-7f01-4c4e-b17c-1e6f2c840451)
+
+
+# Running examples in this repo
+
+Then for the tests, each corresponding README file will give exact instructions but follow this general pattern:
+
+1. Make sure you export the SDK location in `NILLION_SDK_ROOT`
+2. Kick off the bootstrap script which will place the generated config file in the directory of your choosing
+> Note: This will start the anvil blockchain and Nillion run-local-cluster daemons in the background
+3. Chdir to the test directory and launch the test
+
+
+# Demo Code Compatibility Matrix
 > [!NOTE]
 > The following exercises or examples are known to be working with the SDK bundle and/or deployment endpoint (testnet)
 > 
@@ -27,10 +54,11 @@
 
 | Client  | Version  | Local | Remote (Testnet) |  Path |
 |:--------|:--------:|:-----:|:----------------:|:-----:|
-| Python 3.7+                                                                                   | v2024-02-06-0c6f3bec2 | ✅ | ⭕ | [py-client/compute-basic](py-client/compute-basic) |
-| Python 3.7+                                                                                   | v2024-02-06-0c6f3bec2 | ⭕ | ⭕ | [py-client/compute-with-permissions](py-client/compute-with-permissions) |
-| Javascript ([recent chrome](https://developer.chrome.com/blog/enabling-shared-array-buffer/)) | v2024-02-06-0c6f3bec2 | ✅ | ❌ | [js-client/jasmine-test](js-client/jasmine-test) |
-| Javascript ([recent chrome](https://developer.chrome.com/blog/enabling-shared-array-buffer/)) | v2024-02-06-0c6f3bec2 | ⭕ | ⭕ | [js-client/react-webpack-puppeteer-test](js-client/react-webpack-puppeteer-test) |
+| Python 3.7+                                                                                   | v2024-03-12-d2d0a82c8 | ✅ | ⭕ | [py-client/compute-basic](py-client/compute-basic) |
+| Python 3.7+                                                                                   | v2024-03-12-d2d0a82c8 | ✅ | ⭕ | [py-client/compute-with-permissions](py-client/compute-with-permissions) |
+| Javascript ([recent chrome](https://developer.chrome.com/blog/enabling-shared-array-buffer/)) | v2024-03-12-d2d0a82c8 | ✅ | ⭕ | [js-client/basic-html](js-client/basic-html) |
+| Javascript ([recent chrome](https://developer.chrome.com/blog/enabling-shared-array-buffer/)) | v2024-03-12-d2d0a82c8 | ✅ | ⭕ | [js-client/jasmine-test](js-client/jasmine-test) |
+| Javascript ([recent chrome](https://developer.chrome.com/blog/enabling-shared-array-buffer/)) | v2024-03-12-d2d0a82c8 | ✅ (see readme) | ⭕ | [js-client/react-webpack-puppeteer-test](js-client/react-webpack-puppeteer-test) |
 
 # Tools
 
@@ -58,11 +86,11 @@ to json files so that you can easily develop locally.
 
 ```shell
 # create random output files
-bash ./bootstrap-local-environment.sh
+./tools/bootstrap-local-environment.sh
 
 # write config to a named directory
 mkdir -p /your/desired/directory
-bash ./bootstrap-local-environment.sh /your/desired/directory
+bash ./tools/bootstrap-local-environment.sh /your/desired/directory
 ```
 
 stop the cluster by running:

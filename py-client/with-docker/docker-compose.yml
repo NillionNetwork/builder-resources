@@ -1,0 +1,41 @@
+version: '3.8'
+services:
+  demo:
+    container_name: nillion
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM python:3.10-slim
+        ARG DEBIAN_FRONTEND="noninteractive"
+        ENV PUID=1000
+        ENV PGID=1000
+        SHELL ["/bin/bash", "-o", "pipefail", "-xe", "-c"]
+        RUN apt update; \
+            apt install -y --no-install-recommends \
+                bash jq curl git; \
+            apt clean; \
+            rm -rf /var/lib/apt/lists/*; \
+            pip install --upgrade pip; \
+            groupadd --gid 1000 -r nillion; \
+            useradd -rm -g nillion --shell /bin/bash --uid 1000 --gid 1000 nillion;
+        USER nillion
+        RUN { curl -L https://foundry.paradigm.xyz | bash ; } && \
+          /home/nillion/.foundry/bin/foundryup
+    network_mode: 'bridge'
+    environment:
+      - TZ=Europe/London
+      - NILLION_SDK_ROOT=/sdk
+      - PATH=/home/nillion/.local/bin:/home/nillion/.foundry/bin:${PATH}
+    volumes:
+      - '$PWD/../../:/host'
+      - $NILLION_SDK_ROOT:/sdk
+    working_dir: /host
+    command:
+      - /bin/bash
+      - '-c'
+      - |
+        /host/tools/bootstrap-local-environment.sh py-client/compute-basic && \
+          pushd py-client/compute-basic && \
+          source activate_virtualenv.sh && \
+          python3 install_nillion_pip.py && \
+          python3 client.py

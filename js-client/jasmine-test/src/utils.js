@@ -1,17 +1,3 @@
-import * as ed from "@noble/ed25519";
-import { binary_to_base58 } from "base58-js";
-
-const KEYPAIR_LENGTH = 64;
-const PRIVATE_KEY_LENGTH = 32;
-
-export const generate_user_key = async () => {
-  const privKey = ed.utils.randomPrivateKey();
-  const pubKey = await ed.getPublicKeyAsync(privKey);
-  const keypair = new Uint8Array(KEYPAIR_LENGTH);
-  keypair.set(privKey);
-  keypair.set(pubKey, PRIVATE_KEY_LENGTH);
-  return binary_to_base58(keypair);
-};
 export const strFromByteArray = (str) => {
   return new TextDecoder("utf-8").decode(str);
 };
