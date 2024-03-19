@@ -22,10 +22,9 @@ nillion_check_min_system_resources
 
 NIL_CLI="$(discover_sdk_bin_path nil-cli)"
 USER_KEYGEN=$(discover_sdk_bin_path user-keygen)
-NODE_KEYGEN=$(discover_sdk_bin_path node-keygen)
 PYNADAC="$(discover_sdk_bin_path pynadac)"
 
-for var in PYNADAC USER_KEYGEN NODE_KEYGEN NIL_CLI; do
+for var in PYNADAC USER_KEYGEN NIL_CLI; do
   printf "ℹ️ found bin %-18s -> [${!var:?Failed to discover $var}]\n" "$var"
 done
 

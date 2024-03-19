@@ -4,7 +4,7 @@
     "signer": {
       "wallet": {
         "chain_id": 22255222,
-        "private_key": "2f1d0d946a974107a1290c7ccdc35b459bb85ac1ec4718271d73092128f34ca2"
+        "private_key": "YOUR_FUNDED_PRIVATE_KEY"
       }
     },
     "smart_contract_addresses": {

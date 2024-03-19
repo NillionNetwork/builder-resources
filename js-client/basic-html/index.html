@@ -50,18 +50,36 @@
         4,
       );
 
-      const encoder = new TextEncoder();
-      const encoded = await nillion.encode_blob_secret("secret-blob", {
-        bytes: encoder.encode("this is a test"),
-      });
-
-      const secrets = new nillion.Secrets();
-      await secrets.insert(encoded);
       try {
+        const encoder = new TextEncoder();
+        const encoded = await nillion.encode_blob_secret("secret-blob", {
+          bytes: encoder.encode("this is a test"),
+        });
+
+        const secrets = new nillion.Secrets();
+        await secrets.insert(encoded);
         let result = await client.store_secrets(config.cluster_id, secrets);
         document.getElementById("storeid").textContent = result;
-      } catch {
+      } catch (error) {
+        console.error(error);
         var element = document.getElementById("storeid");
+        element.textContent = "🚨 ERROR - see console for details";
+        element.classList.add("error");
+      }
+
+      try {
+        const encoder2 = new TextEncoder();
+        const encoded2 = await nillion.encode_blob_secret("secret-blob2", {
+          bytes: encoder2.encode("this is a test 2"),
+        });
+
+        const secrets2 = new nillion.Secrets();
+        await secrets2.insert(encoded2);
+        let result2 = await client.store_secrets(config.cluster_id, secrets2);
+        document.getElementById("storeid2").textContent = result2;
+      } catch (error) {
+        console.error(error);
+        var element = document.getElementById("storeid2");
         element.textContent = "🚨 ERROR - see console for details";
         element.classList.add("error");
       }
@@ -100,6 +118,13 @@
           <blink><i>pending...</i></blink>
         </p>
       </td>
+    </tr>
+    <th>Store ID 2</th>
+    <td>
+      <p id="storeid2">
+        <blink><i>pending...</i></blink>
+      </p>
+    </td>
     </tr>
     <tr>
       <th>Cluster Info</th>

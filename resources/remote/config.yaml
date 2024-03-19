@@ -3,7 +3,7 @@ payments:
   signer:                                                                                                 
     wallet:                                                                                               
       chain_id: 22255222                                                                                  
-      private_key: 2f1d0d946a974107a1290c7ccdc35b459bb85ac1ec4718271d73092128f34ca2
+      private_key: YOUR_FUNDED_PRIVATE_KEY
   smart_contract_addresses:                                                                               
     blinding_factors_manager: '0xf66cb23aa5857ae1d34a23ce385fa78495c50c69'
     payments: '0xc166ce8bfc56e4493ffd43a99db234a9f0413443'
