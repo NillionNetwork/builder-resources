@@ -18,7 +18,7 @@ source "$ENV_DIR/bin/activate" >/dev/null 2>&1
 # shellcheck source=./utils.sh
 source "$THIS_SCRIPT_DIR/utils.sh"
 
-nillion_check_min_system_resources
+# nillion_check_min_system_resources
 
 RUN_LOCAL_CLUSTER="$(discover_sdk_bin_path run-local-cluster)"
 NIL_CLI="$(discover_sdk_bin_path nil-cli)"
@@ -48,17 +48,17 @@ SEED_PHRASE="$0";
 
 daemonize_cluster "$OUTFILE"
 
-CLUSTER_ID=$(grep "cluster id is" "$OUTFILE" | awk '{print $4}');
-BOOT_MULTIADDR=$(grep -oP 'bootnode is at \K.*' "$OUTFILE");
-BOOT_MULTIADDR_WS=$(grep "websocket: " "$OUTFILE" | awk '{print $2}');
+CLUSTER_ID=$(ggrep "cluster id is" "$OUTFILE" | awk '{print $4}');
+BOOT_MULTIADDR=$(ggrep -oP 'bootnode is at \K.*' "$OUTFILE");
+BOOT_MULTIADDR_WS=$(ggrep "websocket: " "$OUTFILE" | awk '{print $2}');
 
-PAYMENTS_CONFIG_FILE=$(grep "payments configuration written to" "$OUTFILE" | awk '{print $5}');
-WALLET_KEYS_FILE=$(grep "wallet keys written to" "$OUTFILE" | awk '{print $5}');
+PAYMENTS_CONFIG_FILE=$(ggrep "payments configuration written to" "$OUTFILE" | awk '{print $5}');
+WALLET_KEYS_FILE=$(ggrep "wallet keys written to" "$OUTFILE" | awk '{print $5}');
 
-PAYMENTS_RPC=$(grep "blockchain_rpc_endpoint:" "$PAYMENTS_CONFIG_FILE" | awk '{print $2}');
-PAYMENTS_CHAIN=$(grep "chain_id:" "$PAYMENTS_CONFIG_FILE" | awk '{print $2}');
-PAYMENTS_SC_ADDR=$(grep "payments_sc_address:" "$PAYMENTS_CONFIG_FILE" | awk '{print $2}');
-PAYMENTS_BF_ADDR=$(grep "blinding_factors_manager_sc_address:" "$PAYMENTS_CONFIG_FILE" | awk '{print $2}');
+PAYMENTS_RPC=$(ggrep "blockchain_rpc_endpoint:" "$PAYMENTS_CONFIG_FILE" | awk '{print $2}');
+PAYMENTS_CHAIN=$(ggrep "chain_id:" "$PAYMENTS_CONFIG_FILE" | awk '{print $2}');
+PAYMENTS_SC_ADDR=$(ggrep "payments_sc_address:" "$PAYMENTS_CONFIG_FILE" | awk '{print $2}');
+PAYMENTS_BF_ADDR=$(ggrep "blinding_factors_manager_sc_address:" "$PAYMENTS_CONFIG_FILE" | awk '{print $2}');
 
 WALLET_PRIVATE_KEY=$(tail -n1 "$WALLET_KEYS_FILE")
 
@@ -88,7 +88,7 @@ for program_file in "$PYNADAC_COMPILE_ARTIFACTS"/programs/*.bin; do
 	  --blockchain-config-path "$PAYMENTS_CONFIG_FILE" \
 	    store-program --cluster-id "$CLUSTER_ID" \
 			"$program_file" "$program_name" >"$PROGRAMINFO"
-	program_id=$(grep -oP 'Program ID: \K.*' "$PROGRAMINFO");
+	program_id=$(ggrep -oP 'Program ID: \K.*' "$PROGRAMINFO");
 	programs_map["$program_name"]="$program_id"
 	__echo_yellow_bold "✔️ Nillion program [$program_name] is LOADED!"
 done

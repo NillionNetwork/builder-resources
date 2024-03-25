@@ -72,7 +72,7 @@ for program_file in "$PYNADAC_COMPILE_ARTIFACTS"/programs/*.bin; do
     --payments-private-key "$(__conf '.payments_config.signer.wallet.private_key')" \
     store-program --cluster-id "$(__conf '.cluster_id')" \
 			"$program_file" "$program_name" >"$PROGRAMINFO"
-	program_id=$(grep -oP 'Program ID: \K.*' "$PROGRAMINFO");
+	program_id=$(ggrep -oP 'Program ID: \K.*' "$PROGRAMINFO");
 	programs_map["$program_name"]="$program_id"
 	__echo_yellow_bold "✔️ Nillion program [$program_name] is LOADED!"
 done

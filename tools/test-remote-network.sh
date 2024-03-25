@@ -113,7 +113,7 @@ echo >&2 -n "generating user key... "
 $CMD_USER_KEYGEN "$USER_KEY_PATH"
 report_status $? "$START"
 
-if $CMD_LIBP2P_LKUP direct --help | grep --silent keypair-path; then
+if $CMD_LIBP2P_LKUP direct --help | ggrep --silent keypair-path; then
   START=$(ut)
   echo >&2 -n "Test p2p connectivity... "
   # echo "    [$BOOTNODE]"
@@ -145,7 +145,7 @@ RUST_LOG=debug $CMD_NIL_CLI $NIL_CLI_STD \
   store-secrets --cluster-id "$CLUSTER_ID" --dealer-name my_dealer --blob-secret my_secret=Tmls >"$LOG_DIR/store-secrets" 2>&1
 report_status $? "$START"
 
-STORE_ID=$(grep -Po 'Store ID: \K.*' "$LOG_DIR/store-secrets")
+STORE_ID=$(ggrep -Po 'Store ID: \K.*' "$LOG_DIR/store-secrets")
 
 START=$(ut)
 echo >&2 -n "Test retrieving a secret... "
