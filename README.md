@@ -1,9 +1,9 @@
-![image](https://github.com/nillion-oss/builder-resources/assets/33910651/9a38748b-9d5f-4673-a49a-04d2cca180b9)
+![image](https://github.com/NillionNetwork/builder-resources/assets/33910651/9a38748b-9d5f-4673-a49a-04d2cca180b9)
 
 # Builder Resources
 
 > [!WARNING]
-> This repository contains code examples that may not be working with your SDK version. Please see compatability chart below and please [report any issues](https://github.com/nillion-oss/builder-resources/issues/new/choose) you uncover.
+> This repository contains code examples that may not be working with your SDK version. Please see compatability chart below and please [report any issues](https://github.com/NillionNetwork/builder-resources/issues/new/choose) you uncover.
 
 ### Current SDK
 
@@ -23,7 +23,7 @@
 
 # Setting up your system for this repo:
 
-1. Download your SDK files - see [Releases](https://github.com/nillion-oss/builder-resources/releases) over there 👉
+1. Download your SDK files - see [Releases](https://github.com/NillionNetwork/builder-resources/releases) over there 👉
 2. Unpack them to a convenient location (but not in this repo)
 3. Uncompress the `bins` file that corresponds to your system's architecture
 4. Set the environment variable to point to the top of the SDK directory (adjust for your filesystem)
@@ -33,7 +33,7 @@ export NILLION_SDK_ROOT=/home/ubuntu/Desktop/nillion/sdk
 
 The files should looks something like this:
 
-![image](https://github.com/nillion-oss/builder-resources/assets/33910651/9069f2b6-7f01-4c4e-b17c-1e6f2c840451)
+![image](https://github.com/NillionNetwork/builder-resources/assets/33910651/9069f2b6-7f01-4c4e-b17c-1e6f2c840451)
 
 
 # Running examples in this repo
