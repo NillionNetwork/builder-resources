@@ -8,34 +8,24 @@ ENV_DIR=$(mktemp -d);
 if [[ -n "${VIRTUAL_ENV:-}" ]]; then
   deactivate
 fi
+
 python -m pip install --user virtualenv >/dev/null 2>&1
 virtualenv -p python "$ENV_DIR" >/dev/null 2>&1
 # shellcheck disable=SC1091
 source "$ENV_DIR/bin/activate" >/dev/null 2>&1
 
-# pip install -r requirements.txt >/dev/null 2>&1
-
 # shellcheck source=./utils.sh
 source "$THIS_SCRIPT_DIR/utils.sh"
 
-nillion_check_min_system_resources
-
-NIL_CLI="$(discover_sdk_bin_path nil-cli)"
-USER_KEYGEN=$(discover_sdk_bin_path user-keygen)
-PYNADAC="$(discover_sdk_bin_path pynadac)"
-
-for var in PYNADAC USER_KEYGEN NIL_CLI; do
-  printf "ℹ️ found bin %-18s -> [${!var:?Failed to discover $var}]\n" "$var"
-done
-
-for var in anvil curl jq pip; do
-  ensure_available "$var"
-done
+if [[ $(uname) == *"Darwin"* ]]; then
+  echo "TODO: check system resources on macos"
+else
+  nillion_check_min_system_resources
+fi
 
 PYNADAC_COMPILE_ARTIFACTS=$(mktemp -d)
 compile_program "$PYNADAC_COMPILE_ARTIFACTS"
 __echo_yellow_bold "⚠️ compiled programs to [$PYNADAC_COMPILE_ARTIFACTS]"
-
 
 PROGRAMINFO=$(mktemp);
 
@@ -72,7 +62,7 @@ for program_file in "$PYNADAC_COMPILE_ARTIFACTS"/programs/*.bin; do
     --payments-private-key "$(__conf '.payments_config.signer.wallet.private_key')" \
     store-program --cluster-id "$(__conf '.cluster_id')" \
 			"$program_file" "$program_name" >"$PROGRAMINFO"
-	program_id=$(ggrep -oP 'Program ID: \K.*' "$PROGRAMINFO");
+	program_id=$("$CMD_GREP" -oP 'Program ID: \K.*' "$PROGRAMINFO");
 	programs_map["$program_name"]="$program_id"
 	__echo_yellow_bold "✔️ Nillion program [$program_name] is LOADED!"
 done

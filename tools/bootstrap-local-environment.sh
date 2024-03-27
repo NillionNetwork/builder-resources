@@ -13,26 +13,17 @@ virtualenv -p python "$ENV_DIR" >/dev/null 2>&1
 # shellcheck disable=SC1091
 source "$ENV_DIR/bin/activate" >/dev/null 2>&1
 
-# pip install -r requirements.txt >/dev/null 2>&1
-
 # shellcheck source=./utils.sh
 source "$THIS_SCRIPT_DIR/utils.sh"
 
-# nillion_check_min_system_resources
+if [[ $(uname) == *"Darwin"* ]]; then
+  echo "TODO: check system resources on macos"
+else
+  nillion_check_min_system_resources
+fi
 
-RUN_LOCAL_CLUSTER="$(discover_sdk_bin_path run-local-cluster)"
-NIL_CLI="$(discover_sdk_bin_path nil-cli)"
-USER_KEYGEN=$(discover_sdk_bin_path user-keygen)
-NODE_KEYGEN=$(discover_sdk_bin_path node-keygen)
-PYNADAC="$(discover_sdk_bin_path pynadac)"
-
-for var in PYNADAC RUN_LOCAL_CLUSTER USER_KEYGEN NODE_KEYGEN NIL_CLI; do
-  printf "ℹ️ found bin %-18s -> [${!var:?Failed to discover $var}]\n" "$var"
-done
-
-for var in anvil curl jq pip; do
-  ensure_available "$var"
-done
+check_sdk_bins
+check_system_bins
 
 PYNADAC_COMPILE_ARTIFACTS=$(mktemp -d)
 compile_program "$PYNADAC_COMPILE_ARTIFACTS"
@@ -48,17 +39,17 @@ SEED_PHRASE="$0";
 
 daemonize_cluster "$OUTFILE"
 
-CLUSTER_ID=$(ggrep "cluster id is" "$OUTFILE" | awk '{print $4}');
-BOOT_MULTIADDR=$(ggrep -oP 'bootnode is at \K.*' "$OUTFILE");
-BOOT_MULTIADDR_WS=$(ggrep "websocket: " "$OUTFILE" | awk '{print $2}');
+CLUSTER_ID=$($CMD_GREP "cluster id is" "$OUTFILE" | awk '{print $4}');
+BOOT_MULTIADDR=$($CMD_GREP -oP 'bootnode is at \K.*' "$OUTFILE");
+BOOT_MULTIADDR_WS=$($CMD_GREP "websocket: " "$OUTFILE" | awk '{print $2}');
 
-PAYMENTS_CONFIG_FILE=$(ggrep "payments configuration written to" "$OUTFILE" | awk '{print $5}');
-WALLET_KEYS_FILE=$(ggrep "wallet keys written to" "$OUTFILE" | awk '{print $5}');
+PAYMENTS_CONFIG_FILE=$($CMD_GREP "payments configuration written to" "$OUTFILE" | awk '{print $5}');
+WALLET_KEYS_FILE=$($CMD_GREP "wallet keys written to" "$OUTFILE" | awk '{print $5}');
 
-PAYMENTS_RPC=$(ggrep "blockchain_rpc_endpoint:" "$PAYMENTS_CONFIG_FILE" | awk '{print $2}');
-PAYMENTS_CHAIN=$(ggrep "chain_id:" "$PAYMENTS_CONFIG_FILE" | awk '{print $2}');
-PAYMENTS_SC_ADDR=$(ggrep "payments_sc_address:" "$PAYMENTS_CONFIG_FILE" | awk '{print $2}');
-PAYMENTS_BF_ADDR=$(ggrep "blinding_factors_manager_sc_address:" "$PAYMENTS_CONFIG_FILE" | awk '{print $2}');
+PAYMENTS_RPC=$($CMD_GREP "blockchain_rpc_endpoint:" "$PAYMENTS_CONFIG_FILE" | awk '{print $2}');
+PAYMENTS_CHAIN=$($CMD_GREP "chain_id:" "$PAYMENTS_CONFIG_FILE" | awk '{print $2}');
+PAYMENTS_SC_ADDR=$($CMD_GREP "payments_sc_address:" "$PAYMENTS_CONFIG_FILE" | awk '{print $2}');
+PAYMENTS_BF_ADDR=$($CMD_GREP "blinding_factors_manager_sc_address:" "$PAYMENTS_CONFIG_FILE" | awk '{print $2}');
 
 WALLET_PRIVATE_KEY=$(tail -n1 "$WALLET_KEYS_FILE")
 
@@ -88,7 +79,7 @@ for program_file in "$PYNADAC_COMPILE_ARTIFACTS"/programs/*.bin; do
 	  --blockchain-config-path "$PAYMENTS_CONFIG_FILE" \
 	    store-program --cluster-id "$CLUSTER_ID" \
 			"$program_file" "$program_name" >"$PROGRAMINFO"
-	program_id=$(ggrep -oP 'Program ID: \K.*' "$PROGRAMINFO");
+	program_id=$($CMD_GREP -oP 'Program ID: \K.*' "$PROGRAMINFO");
 	programs_map["$program_name"]="$program_id"
 	__echo_yellow_bold "✔️ Nillion program [$program_name] is LOADED!"
 done

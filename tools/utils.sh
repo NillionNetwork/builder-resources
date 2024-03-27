@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+if [ -z "$BASH_VERSION" ] || [ "${BASH_VERSION:0:1}" -lt 4 ]; then
+    echo "Bash version 4 or newer is required."
+    exit 1
+fi
+
 function __echo_red_bold {
   echo -e "\033[1;31m${1}\033[0m"
 }
@@ -8,17 +13,37 @@ function __echo_yellow_bold {
   echo -e "\033[1;33m${1}\033[0m"
 }
 
+if [[ $(uname) == *"Darwin"* ]]; then
+  CMD_GREP="ggrep"
+else
+  CMD_GREP="grep"
+fi
+
+function check_sdk_bins () {
+  for var in PYNADAC RUN_LOCAL_CLUSTER USER_KEYGEN NODE_KEYGEN NIL_CLI; do
+    printf "ℹ️ found bin %-18s -> [${!var:?Failed to discover $var}]\n" "$var"
+  done
+}
+
+function check_system_bins () {
+
+  for var in anvil curl jq python pip pidof "$CMD_GREP"; do
+    ensure_available "$var"
+  done
+}
+
+
 function nillion_check_min_system_resources () {
   
   # Detect number of CPUs
-  NUM_CPUS=$(ggrep -c ^processor /proc/cpuinfo 2>/dev/null)
+  NUM_CPUS=$("$CMD_GREP" -c ^processor /proc/cpuinfo 2>/dev/null)
   if [ -z "$NUM_CPUS" ]; then
     # macOS and other systems that do not support /proc/cpuinfo
     NUM_CPUS=$(sysctl -n hw.ncpu 2>/dev/null || echo 1)
   fi
   
   # Detect total memory in MB
-  MEM_TOTAL=$(ggrep MemTotal /proc/meminfo 2>/dev/null | awk '{print int($2/1024)}')
+  MEM_TOTAL=$("$CMD_GREP" MemTotal /proc/meminfo 2>/dev/null | awk '{print int($2/1024)}')
   if [ -z "$MEM_TOTAL" ]; then
     # macOS and other systems that do not support /proc/meminfo
     MEM_TOTAL=$(sysctl -n hw.memsize 2>/dev/null | awk '{print int($1/1024/1024)}')
@@ -85,7 +110,7 @@ function daemonize_cluster() {
   time_limit=400
   while true; do
       # Use 'wait' to check if the log file contains the string
-      if ggrep "cluster is running, bootnode is at" "$OUTFILE"; then
+      if "$CMD_GREP" "cluster is running, bootnode is at" "$OUTFILE"; then
           break
       fi
   
@@ -122,3 +147,9 @@ function compile_program() {
   popd
   
 }
+
+RUN_LOCAL_CLUSTER="$(discover_sdk_bin_path run-local-cluster)"
+NIL_CLI="$(discover_sdk_bin_path nil-cli)"
+USER_KEYGEN=$(discover_sdk_bin_path user-keygen)
+NODE_KEYGEN=$(discover_sdk_bin_path node-keygen)
+PYNADAC="$(discover_sdk_bin_path pynadac)"
