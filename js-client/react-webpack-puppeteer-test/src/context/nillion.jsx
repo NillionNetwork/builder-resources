@@ -39,7 +39,6 @@ export const NillionContextProvider = (props) => {
           userkey,
           nodekey,
           config.bootnodes_ws,
-          false,
           config.payments_config,
         );
         setClient(wasmclient);

@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "build": "babel src --out-dir lib",
-    "workspace:prepare": "./preinstall_update_package_json_devDependencies_nillion_path.py",
     "test": "npx jasmine-browser-runner runSpecs",
     "test-interactive": "npx jasmine-browser-runner serve"
   },
@@ -14,7 +13,7 @@
     "@babel/cli": "^7.23.4",
     "@babel/core": "^7.23.7",
     "@babel/preset-env": "^7.23.8",
-    "@nillion/nillion-client-js-browser": "file:/home/bionik/Desktop/nillion/sdk/nillion-client-browser-npm.tar.gz",
+    "@nillion/nillion-client-js-browser": "0.0.9",
     "@noble/ed25519": "^2.0.0",
     "base58-js": "^2.0.0",
     "jasmine-browser-runner": "navasvarela/jasmine-browser-runner",

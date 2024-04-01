@@ -96,7 +96,6 @@ function discover_sdk_bin_path() {
 function daemonize_cluster() {
 
   OUTFILE="$1"
-  RUN_LOCAL_CLUSTER="$(discover_sdk_bin_path run-local-cluster)"
   SEED_PHRASE="$0";
   #if pidof "$RUN_LOCAL_CLUSTER" > /dev/null; then
   #  __echo_red_bold "⚠️ $RUN_LOCAL_CLUSTER is already running! It is unlikely you want this, consider terminating that process and re-running this test."
@@ -148,8 +147,8 @@ function compile_program() {
   
 }
 
-RUN_LOCAL_CLUSTER="$(discover_sdk_bin_path run-local-cluster)"
-NIL_CLI="$(discover_sdk_bin_path nil-cli)"
+RUN_LOCAL_CLUSTER="$(discover_sdk_bin_path nillion-devnet)"
+NIL_CLI="$(discover_sdk_bin_path nillion)"
 USER_KEYGEN=$(discover_sdk_bin_path user-keygen)
 NODE_KEYGEN=$(discover_sdk_bin_path node-keygen)
 PYNADAC="$(discover_sdk_bin_path pynadac)"

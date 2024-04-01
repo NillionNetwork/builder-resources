@@ -1,7 +1,6 @@
 # 🔥 🥵 This test is kinda broken and kinda workin' 🫠
 
-There's a known issue of panics happening in the client subsystem that signal failure. The calls do, however, 
-complete so it is possible to build on this example.
+The headful test succeeds, the headless test times out.
 
 # How to run test
 
@@ -14,7 +13,6 @@ complete so it is possible to build on this example.
 
 ## 2. install pre-requisite libraries
 ```bash
-npm run workspace:prepare
 npm i --include=dev
 ```
 

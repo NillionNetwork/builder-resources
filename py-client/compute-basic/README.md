@@ -11,7 +11,7 @@
 ## 2. install pre-requisite libraries
 ```bash
 source activate_virtualenv.sh
-python3 install_nillion_pip.py
+pip install py-nillion-client
 ```
 
 ## 3a. Run test
