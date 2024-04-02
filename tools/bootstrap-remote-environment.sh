@@ -1,8 +1,19 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -eo pipefail
+
+function command_help {
+  cat <<EOF >&2
+
+This script will merge uploaded program ids into the remote.json
+
+Usage: $0 <PATH-TO-YOUR-WHITELISTED-NODEKEY> <DESTINATION-PATH-OF-REMOTE-CONFIG>
+
+EOF
+}
 
 THIS_SCRIPT_DIR="$(dirname "$0")"
-TARGET_ENV_FILE_PATH="${1:-$(mktemp -d)}"
+NODEKEYFILE="$1"
+TARGET_ENV_FILE_PATH="${2:-$(mktemp -d)}"
 
 ENV_DIR=$(mktemp -d);
 if [[ -n "${VIRTUAL_ENV:-}" ]]; then
@@ -23,6 +34,9 @@ else
   nillion_check_min_system_resources
 fi
 
+check_sdk_bins
+check_system_bins
+
 PYNADAC_COMPILE_ARTIFACTS=$(mktemp -d)
 compile_program "$PYNADAC_COMPILE_ARTIFACTS"
 __echo_yellow_bold "⚠️ compiled programs to [$PYNADAC_COMPILE_ARTIFACTS]"
@@ -36,10 +50,15 @@ function __conf () {
   jq -r "$query" "$PATH_TO_CONFIG"
 }
 
-RUSERKEYFILE="$(__conf '.keypath.ruser')";
-WUSERKEYFILE="$(__conf '.keypath.wuser')";
-NODEKEYFILE="$(__conf '.keypath.node')";
+RUSERKEYFILE="$(mktemp)";
+WUSERKEYFILE="$(mktemp)";
 
+
+if [[ ! -e "$NODEKEYFILE" ]]; then
+  __echo_red_bold "⚠️ You must supply a path to your node key that you generated (and whitelisted) with node-keygen}"
+  command_help
+  exit 1
+fi
 "$USER_KEYGEN" --seed "this is the reader key" "$RUSERKEYFILE"
 __echo_yellow_bold "⚠️ loaded userkey from [$RUSERKEYFILE]"
 

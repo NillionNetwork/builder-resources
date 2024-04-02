@@ -70,9 +70,6 @@ function setup() {
   BOOTNODE="/dns/$BOOTNODE_HOST/tcp/$BOOTNODE_PORT/$BOOTNODE_PROTO/$BOOTNODE_ID"
   LOG_DIR=$(mktemp -d)
 
-	CMD_USER_KEYGEN="$(discover_sdk_bin_path user-keygen)"
-	CMD_NIL_CLI="$(discover_sdk_bin_path nil-cli)"
-
   if path=$(command -v libp2p-lookup); then
     CMD_LIBP2P_LKUP="$(realpath "$path")"
   fi
@@ -94,8 +91,8 @@ function setup() {
   echo >&2 -e "\033[33m| seed phrase        [$SEED_PHRASE] \033[0m"
   echo >&2 -e "\033[33m| websocket addr     [$($USE_WEBSOCKET_ADDR && echo "yes" || echo "no")] \033[0m"
   echo >&2 -e "\033[33m| payments config    [$PAYMENTS_CONFIG_PATH] \033[0m"
-  echo >&2 -e "\033[33m| cmd nil-cli        [$CMD_NIL_CLI] \033[0m"
-  echo >&2 -e "\033[33m| cmd user keygen    [$CMD_USER_KEYGEN] \033[0m"
+  echo >&2 -e "\033[33m| cmd nil-cli        [$NIL_CLI] \033[0m"
+  echo >&2 -e "\033[33m| cmd user keygen    [$USER_KEYGEN] \033[0m"
   echo >&2 -e "\033[33m| cmd libp2p-lookup  [$CMD_LIBP2P_LKUP] \033[0m"
   echo >&2 -e "\033[33m| log dir            [${LOG_DIR}] \033[0m"
   echo >&2
@@ -107,9 +104,12 @@ function ut() {
 
 setup $*
 
+check_sdk_bins
+check_system_bins
+
 START=$(ut)
 echo >&2 -n "generating user key... "
-$CMD_USER_KEYGEN "$USER_KEY_PATH"
+$USER_KEYGEN "$USER_KEY_PATH"
 report_status $? "$START"
 
 if $CMD_LIBP2P_LKUP direct --help | "$CMD_GREP" --silent keypair-path; then
@@ -125,7 +125,7 @@ while false; do
   START=$(ut)
   echo >&2 -n "Test node build info... "
   # shellcheck disable=SC2086
-  $CMD_NIL_CLI $NIL_CLI_STD \
+  $NIL_CLI $NIL_CLI_STD \
     node-build-info "$BOOTNODE_ID" >"$LOG_DIR/node-build-info" 2>&1
   report_status $? "$START"
 done
@@ -133,14 +133,14 @@ done
 START=$(ut)
 echo >&2 -n "Test retrieving cluster information... "
 # shellcheck disable=SC2086
-$CMD_NIL_CLI $NIL_CLI_STD \
+$NIL_CLI $NIL_CLI_STD \
   cluster-information "$CLUSTER_ID" >"$LOG_DIR/cluster-information" 2>&1
 report_status $? "$START"
 
 START=$(ut)
 echo >&2 -n "Test persisting a secret... "
 # shellcheck disable=SC2086
-RUST_LOG=debug $CMD_NIL_CLI $NIL_CLI_STD \
+RUST_LOG=debug $NIL_CLI $NIL_CLI_STD \
   store-secrets --cluster-id "$CLUSTER_ID" --dealer-name my_dealer --blob-secret my_secret=Tmls >"$LOG_DIR/store-secrets" 2>&1
 report_status $? "$START"
 
@@ -149,7 +149,7 @@ STORE_ID=$("$CMD_GREP" -Po 'Store ID: \K.*' "$LOG_DIR/store-secrets")
 START=$(ut)
 echo >&2 -n "Test retrieving a secret... "
 # shellcheck disable=SC2086
-RUST_LOG=debug $CMD_NIL_CLI $NIL_CLI_STD \
+RUST_LOG=debug $NIL_CLI $NIL_CLI_STD \
   retrieve-secret --cluster-id "$CLUSTER_ID" --store-id "$STORE_ID" --secret-id my_secret >"$LOG_DIR/retrieve-secret" 2>&1
 report_status $? "$START"
 
@@ -160,7 +160,5 @@ if [ $ERRORS -gt 0 ]; then
 else
   echo -e "\033[32mOK\033[0m"
   __echo_yellow_bold "✔️ Nillion cluster is VALIDATED!"
-  #rm "${LOG_DIR:?}"/*
-  #rmdir "$LOG_DIR"
   exit 0
 fi
