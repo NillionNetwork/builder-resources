@@ -129,6 +129,6 @@ jq -n \
     }' >"$TARGET_ENV_FILE_PATH/local.json"
 echo "ℹ️  injected program, bootnode and cluster_id into config: [$TARGET_ENV_FILE_PATH/local.json]";
 __echo_red_bold "⚠️ "
-__echo_red_bold "⚠️ cluster running in background; stop it with 'killall run-local-cluster'"
+__echo_red_bold "⚠️ cluster running in background; stop it with 'killall nillion-devnet'"
 __echo_red_bold "⚠️ "
 __echo_red_bold "⚠️ dumped nodekey to [$NODEKEYFILE]"

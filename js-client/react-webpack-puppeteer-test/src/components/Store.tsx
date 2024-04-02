@@ -23,13 +23,7 @@ const Store: React.FC<StoreProps> = () => {
 
     try {
       const collection = new nillion.Secrets();
-      const encoded = await nillion.encode_blob_secret(
-        `My Secrets ID`,
-        {
-          bytes: resultBytes,
-        },
-      );
-      await collection.insert(encoded);
+      collection.insert(`My Secrets ID`, nillion.Secret.new_blob(resultBytes));
       console.log(
         `going to start store of string [${content.current?.value}] to cluster: ${config.cluster_id}`,
       );

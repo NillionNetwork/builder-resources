@@ -4,15 +4,7 @@ import Button from "./Button";
 import config from "../../nillion.config";
 import { useClient } from "../context/nillion";
 
-interface ComputeProps {}
-
-const bigIntFromByteArray = (byteArray: Uint8Array) => {
-  let hexString = "0x";
-  for (let i = byteArray.length - 1; i >= 0; i--) {
-    hexString += byteArray[i].toString(16).padStart(2, "0");
-  }
-  return BigInt(hexString);
-};
+interface ComputeProps { }
 
 const Compute: React.FC<ComputeProps> = () => {
   const { client, nillion } = useClient();
@@ -39,15 +31,15 @@ const Compute: React.FC<ComputeProps> = () => {
         console.log(`>>>--> secret_id: ${secret_id}`);
         if (config.store_secrets[secret_id].hasOwnProperty("BigUint")) {
           console.log(
-            `>>>-----> biguint: ${
-              config.store_secrets[secret_id].BigUint.value
+            `>>>-----> biguint: ${config.store_secrets[secret_id].BigUint.value
             }`,
           );
-          const encoded = await nillion.encode_unsigned_integer_secret(
+          store_secrets.insert(
             secret_id,
-            { as_string: config.store_secrets[secret_id].BigUint.value },
+            nillion.Secret.new_unsigned_integer(
+              config.store_secrets[secret_id].BigUint.value,
+            ),
           );
-          await store_secrets.insert(encoded);
         }
       }
       console.log(`>>> client.store with program binding`);
@@ -72,13 +64,16 @@ const Compute: React.FC<ComputeProps> = () => {
       const compute_secrets = new nillion.Secrets();
       for (let secret_id of Object.keys(config.compute_secrets)) {
         if (config.compute_secrets[secret_id].hasOwnProperty("BigUint")) {
-          const encoded = await nillion.encode_unsigned_integer_secret(
+          compute_secrets.insert(
             secret_id,
-            { as_string: config.compute_secrets[secret_id].BigUint.value },
+            nillion.Secret.new_unsigned_integer(
+              config.compute_secrets[secret_id].BigUint.value,
+            ),
           );
-          await compute_secrets.insert(encoded);
         }
       }
+      const public_variables = new nillion.PublicVariables();
+        
       console.log(`<<< adding compute_secrets from config`);
 
       console.log(`>>> running client.compute`);
@@ -87,24 +82,22 @@ const Compute: React.FC<ComputeProps> = () => {
         program_bindings,
         [store_id],
         compute_secrets,
+        public_variables
       );
       console.log(`<<< running client.compute ${compute_result_uuid}`);
 
-      console.log(`>>> running client.compute`);
+      console.log(`>>> running client.compute_result`);
       const compute_result = await client.compute_result(
         compute_result_uuid,
       );
-      console.log(`<<< running client.compute ${compute_result}`);
+      console.log(`<<< running client.compute_result`);
 
-      const my_int = bigIntFromByteArray(compute_result.value);
-      setRetrievalCode(my_int.toString());
+      setRetrievalCode(compute_result["Add0"].toString());
 
-      console.log(`client.compute completed - ${my_int}`);
       console.log(`DONE`);
       console.log(`finished client.compute`);
-
     } catch (error) {
-      console.log(`ERROR`);
+      console.log(`ERROR: ${error}`);
       console.log(JSON.stringify(error, null, 4));
     }
   };

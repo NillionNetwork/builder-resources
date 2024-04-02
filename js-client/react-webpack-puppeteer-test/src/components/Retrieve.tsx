@@ -26,8 +26,7 @@ const Retrieve: React.FC<RetrieveProps> = () => {
       );
 
       console.log(`client.retrieve_secret completed`);
-      console.log(JSON.stringify(secret, null, 4));
-      const result = await nillion.decode_bytearray_secret(secret);
+      const result = secret.to_byte_array();
       console.log(`decode_bytearray_secret completed`);
       console.log(`DONE`);
       console.log(`finished client.retrieve_secret`);
@@ -66,9 +65,11 @@ const Retrieve: React.FC<RetrieveProps> = () => {
           />
         </li>
         <li className="px-4 py-3 border">
-          {retrievalCode
-            ? <div id="test-2-result">{retrievalCode}</div>
-            : <div><i>pending result...</i></div>}
+          {retrievalCode ? <div id="test-2-result">{retrievalCode}</div> : (
+            <div>
+              <i>pending result...</i>
+            </div>
+          )}
         </li>
       </ul>
     </section>

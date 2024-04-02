@@ -63,13 +63,13 @@ function nillion_check_min_system_resources () {
 }
 
 function __nillion_pip_install() {
-  WHLPATH=$(find -L "$NILLION_SDK_ROOT" -iname "$1" -type f -print | head -n1)
-  echo $WHLPATH
-  pip install --force-reinstall "${WHLPATH:?could not find $1 in $NILLION_WHL_ROOT}"
+  # pip install py-nillion-client
+  echo "__nillion_pip_install is no longer used; use pypi and pip"
+  exit 1
 }
 
 function install_nada_dsl() {
-  __nillion_pip_install "nada_dsl-*-any.whl"
+  pip install nada-dsl
 }
 
 function ensure_available() {
@@ -82,21 +82,9 @@ function ensure_available() {
   fi
 }
 
-function discover_sdk_bin_path() {
-  
-  BINPATH=$(find -L "$NILLION_SDK_ROOT" -name "$1" -type f -print | head -n1)
-
-  if ! command -v "$BINPATH" > /dev/null; then
-    echo "${1} was not discovered. Check $NILLION_SDK_ROOT" 1>&2
-    exit 1
-  fi
-  echo "$BINPATH"
-}
-
 function daemonize_cluster() {
 
   OUTFILE="$1"
-  RUN_LOCAL_CLUSTER="$(discover_sdk_bin_path run-local-cluster)"
   SEED_PHRASE="$0";
   #if pidof "$RUN_LOCAL_CLUSTER" > /dev/null; then
   #  __echo_red_bold "⚠️ $RUN_LOCAL_CLUSTER is already running! It is unlikely you want this, consider terminating that process and re-running this test."
@@ -133,7 +121,6 @@ function compile_program() {
   TARGET_PROGRAM_PATH="$TARGET_PROGRAM_PATH/programs"
 	rm -rf "$TARGET_PROGRAM_PATH"
 	mkdir -p "$TARGET_PROGRAM_PATH"
-	PYNADAC="$(discover_sdk_bin_path pynadac)"
   install_nada_dsl
 
   pushd "$(git rev-parse --show-toplevel || echo .)/resources/programs" || exit 1
@@ -148,8 +135,8 @@ function compile_program() {
   
 }
 
-RUN_LOCAL_CLUSTER="$(discover_sdk_bin_path run-local-cluster)"
-NIL_CLI="$(discover_sdk_bin_path nil-cli)"
-USER_KEYGEN=$(discover_sdk_bin_path user-keygen)
-NODE_KEYGEN=$(discover_sdk_bin_path node-keygen)
-PYNADAC="$(discover_sdk_bin_path pynadac)"
+RUN_LOCAL_CLUSTER=nillion-devnet
+NIL_CLI=nillion
+USER_KEYGEN=user-keygen
+NODE_KEYGEN=node-keygen
+PYNADAC=pynadac

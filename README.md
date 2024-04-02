@@ -7,7 +7,7 @@
 
 ### Current SDK
 
-**release_version v2024-03-12-d2d0a82c8**
+**release_version v2024-04-02-9190481d5**
 
 > [!NOTE]
 > Live testnet requires that you have a pre-funded eth wallet on our custom chain. Please speak to your Nillion tech for guidance
@@ -23,27 +23,23 @@
 
 # Setting up your system for this repo:
 
-1. Download your SDK files - see [Releases](https://github.com/NillionNetwork/builder-resources/releases) over there 👉
-2. Unpack them to a convenient location (but not in this repo)
-3. Uncompress the `bins` file that corresponds to your system's architecture
-4. Set the environment variable to point to the top of the SDK directory (adjust for your filesystem)
-```bash
-export NILLION_SDK_ROOT=/home/ubuntu/Desktop/nillion/sdk
-```
+> [!NOTE]
+> The README of each example will have instructions for installing the client
 
-The files should looks something like this:
-
-![image](https://github.com/NillionNetwork/builder-resources/assets/33910651/9069f2b6-7f01-4c4e-b17c-1e6f2c840451)
+1. Use the guide to install [SDK and Tools](https://docs.nillion.com/nillion-sdk-and-tools)
+2. Install python client library and py-nada-lang from pypi - [py-nillion-client](https://pypi.org/project/py-nillion-client/)
+3. Install javascript client library from npmjs - [nillion-client-js-browser](https://www.npmjs.com/package/@nillion/nillion-client-js-browser)
 
 
 # Running examples in this repo
 
 Then for the tests, each corresponding README file will give exact instructions but follow this general pattern:
 
-1. Make sure you export the SDK location in `NILLION_SDK_ROOT`
-2. Kick off the bootstrap script which will place the generated config file in the directory of your choosing
-> Note: This will start the anvil blockchain and Nillion run-local-cluster daemons in the background
+1. Make sure your SDK binaries are in the path
+2. Kick off the bootstrap script which will place the generated config file in the directory of your choosing 
+> Note: This will start the anvil blockchain and Nillion nillion-devnet daemons in the background; you can reuse a single local.json file across all examples
 3. Chdir to the test directory and launch the test
+
 
 
 # Demo Code Compatibility Matrix
@@ -60,11 +56,11 @@ Then for the tests, each corresponding README file will give exact instructions 
 
 | Client  | Version  | Local | Remote (Testnet) |  Path |
 |:--------|:--------:|:-----:|:----------------:|:-----:|
-| Python 3.7+                                                                                   | v2024-03-12-d2d0a82c8 | ✅ | ✅ | [py-client/compute-basic](py-client/compute-basic) |
-| Python 3.7+                                                                                   | v2024-03-12-d2d0a82c8 | ✅ | ✅ | [py-client/compute-with-permissions](py-client/compute-with-permissions) |
-| Javascript ([recent chrome](https://developer.chrome.com/blog/enabling-shared-array-buffer/)) | v2024-03-12-d2d0a82c8 | ✅ | ✅ | [js-client/basic-html](js-client/basic-html) |
-| Javascript ([recent chrome](https://developer.chrome.com/blog/enabling-shared-array-buffer/)) | v2024-03-12-d2d0a82c8 | ✅ | ✅ | [js-client/jasmine-test](js-client/jasmine-test) |
-| Javascript ([recent chrome](https://developer.chrome.com/blog/enabling-shared-array-buffer/)) | v2024-03-12-d2d0a82c8 | ✅ (see readme) | ❌ | [js-client/react-webpack-puppeteer-test](js-client/react-webpack-puppeteer-test) |
+| Python 3.7+                                                                                   | v2024-04-02-9190481d5 | ✅ | ✅ | [py-client/compute-basic](py-client/compute-basic) |
+| Python 3.7+                                                                                   | v2024-04-02-9190481d5 | ✅ | ✅ | [py-client/compute-with-permissions](py-client/compute-with-permissions) |
+| Javascript ([recent chrome](https://developer.chrome.com/blog/enabling-shared-array-buffer/)) | v2024-04-02-9190481d5 | ✅ | ✅ | [js-client/basic-html](js-client/basic-html) |
+| Javascript ([recent chrome](https://developer.chrome.com/blog/enabling-shared-array-buffer/)) | v2024-04-02-9190481d5 | ✅ | ✅ | [js-client/jasmine-test](js-client/jasmine-test) |
+| Javascript ([recent chrome](https://developer.chrome.com/blog/enabling-shared-array-buffer/)) | v2024-04-02-9190481d5 | ✅ (see readme) | ✅ | [js-client/react-webpack-puppeteer-test](js-client/react-webpack-puppeteer-test) |
 
 
 # Tools
@@ -102,7 +98,7 @@ bash ./tools/bootstrap-local-environment.sh /your/desired/directory
 
 stop the cluster by running:
 ```shell
-killall run-local-cluster
+killall nillion-devnet
 ```
 
 ## test-remote-network.sh

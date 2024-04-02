@@ -1,10 +1,9 @@
 {
   "scripts": {
-    "start": "serve",
-    "workspace:prepare": "./preinstall_update_package_json_devDependencies_nillion_path.py"
+    "start": "serve"
   },
   "devDependencies": {
-    "@nillion/nillion-client-js-browser": "file:/home/bionik/Desktop/nillion/sdk/nillion-client-browser-npm.tar.gz",
+    "@nillion/nillion-client-js-browser": "0.0.9",
     "serve": "^14.2.1"
   }
 }

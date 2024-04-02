@@ -33,12 +33,11 @@ async def main():
         secret_name = "fortytwo"
         result = await reader.retrieve_secret(cluster_id, args.store_id, secret_name)
         print(f"⛔ FAIL: {reader_user_id} user id with revoked permissions was allowed to access secret", file=sys.stderr)
-    except TypeError as e:
-        if str(e) == "the user is not authorized to access the secret":
-            print(f"🦄 Success: After user permissions were revoked, {reader_user_id} was not allowed to access secret", file=sys.stderr)
-            pass
-        else:
-            raise(e)
+    except nillion.PermissionError as e:
+        print(f"🦄 Success: After user permissions were revoked, {reader_user_id} was not allowed to access secret", file=sys.stderr)
+        pass
+    except Exception as e:
+        raise(e)
 
 
 asyncio.run(main())

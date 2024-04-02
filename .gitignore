@@ -304,7 +304,10 @@ nillion-venv/
 permissions/.nillion-config.json
 .env
 .DS_Store
+**/package-lock.json
 
 py-client/compute-basic/programs/
+py-client/**/remote.json
+js-client/**/remote.json
 
 local.json
