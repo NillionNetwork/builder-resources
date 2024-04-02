@@ -95,7 +95,15 @@ done
 PROGRAMS_JSON="$(mktemp)"
 jq -n \
     --argjson programs "$programs_map_json" \
+    --arg nodekey "$NODEKEYFILE" \
+    --arg ruserkey "$RUSERKEYFILE" \
+    --arg wuserkey "$WUSERKEYFILE" \
     '{
+      "keypath": {
+        "node": $nodekey,
+        "ruser": $ruserkey,
+        "wuser": $wuserkey,
+      },
 			$programs
     }' >"$PROGRAMS_JSON"
 

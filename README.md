@@ -7,7 +7,7 @@
 
 ### Current SDK
 
-**release_version v2024-04-01-74c8e6ef7**
+**release_version v2024-04-02-9190481d5**
 
 > [!NOTE]
 > Live testnet requires that you have a pre-funded eth wallet on our custom chain. Please speak to your Nillion tech for guidance
@@ -56,11 +56,11 @@ Then for the tests, each corresponding README file will give exact instructions 
 
 | Client  | Version  | Local | Remote (Testnet) |  Path |
 |:--------|:--------:|:-----:|:----------------:|:-----:|
-| Python 3.7+                                                                                   | v2024-04-01-74c8e6ef7 | ✅ | ⭕ | [py-client/compute-basic](py-client/compute-basic) |
-| Python 3.7+                                                                                   | v2024-04-01-74c8e6ef7 | ✅ | ⭕ | [py-client/compute-with-permissions](py-client/compute-with-permissions) |
-| Javascript ([recent chrome](https://developer.chrome.com/blog/enabling-shared-array-buffer/)) | v2024-04-01-74c8e6ef7 | ✅ | ⭕ | [js-client/basic-html](js-client/basic-html) |
-| Javascript ([recent chrome](https://developer.chrome.com/blog/enabling-shared-array-buffer/)) | v2024-04-01-74c8e6ef7 | ✅ | ⭕ | [js-client/jasmine-test](js-client/jasmine-test) |
-| Javascript ([recent chrome](https://developer.chrome.com/blog/enabling-shared-array-buffer/)) | v2024-04-01-74c8e6ef7 | ✅ (see readme) | ⭕ | [js-client/react-webpack-puppeteer-test](js-client/react-webpack-puppeteer-test) |
+| Python 3.7+                                                                                   | v2024-04-02-9190481d5 | ✅ | ✅ | [py-client/compute-basic](py-client/compute-basic) |
+| Python 3.7+                                                                                   | v2024-04-02-9190481d5 | ✅ | ✅ | [py-client/compute-with-permissions](py-client/compute-with-permissions) |
+| Javascript ([recent chrome](https://developer.chrome.com/blog/enabling-shared-array-buffer/)) | v2024-04-02-9190481d5 | ✅ | ✅ | [js-client/basic-html](js-client/basic-html) |
+| Javascript ([recent chrome](https://developer.chrome.com/blog/enabling-shared-array-buffer/)) | v2024-04-02-9190481d5 | ✅ | ✅ | [js-client/jasmine-test](js-client/jasmine-test) |
+| Javascript ([recent chrome](https://developer.chrome.com/blog/enabling-shared-array-buffer/)) | v2024-04-02-9190481d5 | ✅ (see readme) | ✅ | [js-client/react-webpack-puppeteer-test](js-client/react-webpack-puppeteer-test) |
 
 
 # Tools

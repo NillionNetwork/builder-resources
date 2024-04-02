@@ -182,7 +182,7 @@ describe("Nillion Client", () => {
       "another-int",
     );
     expect(secret.to_integer(), context.test1.original_integer);
-  }, 10000);
+  }, 20000);
 
   // TODO: this test does not pass
   xit("should be able to retrieve_permissions", async () => {
