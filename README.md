@@ -1,4 +1,4 @@
-![public-notice-2](https://github.com/nillion-oss/builder-resources/assets/33910651/06197361-b2d4-4816-9692-762b399d2e31)
+![public-notice-3](https://github.com/NillionNetwork/builder-resources/assets/33910651/5f06413d-a608-4817-8764-0134ccb2e128)
 
 # Builder Resources
 
