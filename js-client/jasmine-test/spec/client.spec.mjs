@@ -18,7 +18,7 @@ describe("Nillion Client", () => {
     context.test1 = {
       expected_party_id: "12D3KooWGq5MCUuLARrwM95muvipNWy4MqmCk41g9k9JVth6AF6e",
       input: "this is a test",
-      program_id: context.config.programs.simple_mult
+      program_id: context.config.programs.simple_mult,
     };
   });
 
@@ -42,7 +42,10 @@ describe("Nillion Client", () => {
   });
 
   it("should have predictable party_id because of the hardcoded node key seed", () => {
-    let my_party_id = context.client.party_id();
+    let my_party_id = (typeof context.client.party_id === "function")
+      ? context.client.party_id()
+      : context.client.party_id;
+
     expect(my_party_id).toBeDefined();
     expect(my_party_id).toEqual(context.test1.expected_party_id);
     context.test1.party_id = my_party_id;

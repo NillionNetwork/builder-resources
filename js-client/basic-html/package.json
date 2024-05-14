@@ -3,7 +3,7 @@
     "start": "serve"
   },
   "devDependencies": {
-    "@nillion/nillion-client-js-browser": "0.0.9",
+    "@nillion/nillion-client-js-browser": "latest",
     "serve": "^14.2.1"
   }
 }
