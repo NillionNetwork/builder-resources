@@ -46,14 +46,16 @@ async def main():
     #     bytearray("this is a test blob".encode("utf-8"))
     # )
 
-    to_be_store_secrets = py_nillion_client.Secrets(
-        {"my_int1": my_int1 }
-    )
+    to_be_store_secrets = py_nillion_client.Secrets({"my_int1": my_int1})
 
     # We bind the storage of the secret to the circuit and the concrete party
+    my_party_id = (
+        client.party_id() if callable(getattr(client, "party_id")) else client.party_id
+    )
+
     program_id = config["programs"]["basic"]
     bindings = py_nillion_client.ProgramBindings(program_id)
-    bindings.add_input_party("Party1", client.party_id())
+    bindings.add_input_party("Party1", my_party_id)
     print(f"Storing secret: {to_be_store_secrets}")
     # Store the secret
     store_id = await client.store_secrets(
@@ -64,8 +66,8 @@ async def main():
 
     # bind the parties in the computation to the client
     bindings = py_nillion_client.ProgramBindings(program_id)
-    bindings.add_input_party("Party1", client.party_id())
-    bindings.add_output_party("Party1", client.party_id())
+    bindings.add_input_party("Party1", my_party_id)
+    bindings.add_output_party("Party1", my_party_id)
 
     print(f"Computing using program {program_id}")
     print(f"Stored secret: {store_id}")

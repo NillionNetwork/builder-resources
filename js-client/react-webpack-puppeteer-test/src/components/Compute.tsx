@@ -12,7 +12,9 @@ const Compute: React.FC<ComputeProps> = () => {
 
   const actionCompute = async () => {
     console.log(`starting client.compute`);
-    let party_id = await client.party_id();
+    let party_id = (typeof client.party_id === "function")
+      ? client.party_id()
+      : client.party_id;
     console.log(party_id);
 
     try {
@@ -73,7 +75,7 @@ const Compute: React.FC<ComputeProps> = () => {
         }
       }
       const public_variables = new nillion.PublicVariables();
-        
+
       console.log(`<<< adding compute_secrets from config`);
 
       console.log(`>>> running client.compute`);
@@ -82,7 +84,7 @@ const Compute: React.FC<ComputeProps> = () => {
         program_bindings,
         [store_id],
         compute_secrets,
-        public_variables
+        public_variables,
       );
       console.log(`<<< running client.compute ${compute_result_uuid}`);
 

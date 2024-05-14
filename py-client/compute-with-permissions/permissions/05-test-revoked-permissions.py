@@ -27,7 +27,9 @@ async def main():
     
     # Reader Nillion client
     reader = create_nillion_client(reader_userkey)
-    reader_user_id = reader.user_id()
+    reader_user_id = (
+        reader.user_id() if callable(getattr(reader, "user_id")) else reader.user_id
+    )
 
     try:
         secret_name = "fortytwo"

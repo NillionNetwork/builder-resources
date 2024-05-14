@@ -11,7 +11,7 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
-    "@nillion/nillion-client-js-browser": "0.0.9",
+    "@nillion/nillion-client-js-browser": "latest",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   },

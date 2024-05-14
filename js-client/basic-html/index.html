@@ -39,8 +39,14 @@
         config.payments_config,
       );
 
-      const party_id = await client.party_id();
-      document.getElementById("partyid").textContent = party_id;
+      if (typeof client.party_id === "function") {
+        const party_id = client.party_id();
+        document.getElementById("partyid").textContent = party_id;
+      }
+      else {
+        document.getElementById("partyid").textContent = client.party_id;
+
+      }
 
       const status = await client.cluster_information(config.cluster_id);
       document.getElementById("clusterinfo").textContent = JSON.stringify(

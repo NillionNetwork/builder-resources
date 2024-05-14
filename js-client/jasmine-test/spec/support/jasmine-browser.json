@@ -22,8 +22,6 @@
   "importMap": {
     "moduleRootDir": "node_modules",
     "imports": {
-      "@noble/ed25519": "@noble/ed25519/index.js",
-      "base58-js": "base58-js/index.mjs",
       "@nillion/nillion-client-js-browser": "@nillion/nillion-client-js-browser/nillion_client_js_browser.js"
     }
   },

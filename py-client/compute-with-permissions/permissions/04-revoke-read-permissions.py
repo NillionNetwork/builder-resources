@@ -6,6 +6,7 @@ import os
 import sys
 from dotenv import load_dotenv
 from nillion_client_helper import create_nillion_client
+
 load_dotenv()
 
 parser = argparse.ArgumentParser(
@@ -35,7 +36,10 @@ async def main():
     writer = create_nillion_client(writer_userkey)
 
     # Create new permissions object to rewrite permissions (reader no longer has retrieve permission)
-    new_permissions = nillion.Permissions.default_for_user(writer.user_id())
+    writer_user_id = (
+        writer.user_id() if callable(getattr(writer, "user_id")) else writer.user_id
+    )
+    new_permissions = nillion.Permissions.default_for_user(writer_user_id)
     result = (
         "allowed"
         if new_permissions.is_retrieve_allowed(args.revoked_user_id)
@@ -45,11 +49,16 @@ async def main():
         raise Exception("failed to create valid permissions object")
 
     # Update the permission
-    print(f"ℹ️ Updating permissions for secret: {args.store_id}.") 
-    print(f"ℹ️ Reset permissions so that user id {args.revoked_user_id} is {result} to retrieve object.", file=sys.stderr)
-    await writer.update_permissions( cluster_id, args.store_id , new_permissions)
+    print(f"ℹ️ Updating permissions for secret: {args.store_id}.")
+    print(
+        f"ℹ️ Reset permissions so that user id {args.revoked_user_id} is {result} to retrieve object.",
+        file=sys.stderr,
+    )
+    await writer.update_permissions(cluster_id, args.store_id, new_permissions)
 
-    print("\n\nRun the following command to test that permissions have been properly revoked")
+    print(
+        "\n\nRun the following command to test that permissions have been properly revoked"
+    )
     print(f"\n📋  python3 05-test-revoked-permissions.py --store_id {args.store_id}")
 
 
