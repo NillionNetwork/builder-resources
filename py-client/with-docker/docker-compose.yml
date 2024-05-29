@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  demo:
+  heartbeat:
     container_name: nillion
     build:
       context: .
@@ -13,7 +13,7 @@ services:
         SHELL ["/bin/bash", "-o", "pipefail", "-xe", "-c"]
         RUN apt update; \
             apt install -y --no-install-recommends \
-                bash jq curl git; \
+                bash jq curl git build-essential; \
             apt clean; \
             rm -rf /var/lib/apt/lists/*; \
             pip install --upgrade pip; \
@@ -28,19 +28,20 @@ services:
           /home/nillion/.nilup/bin/nilup use $${NIL_SDK_VERSION};
         RUN  pip install nada-dsl==$${NIL_SDK_VERSION}; \
              pip install py-nillion-client==$${NIL_SDK_VERSION};
+        RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y;
+        RUN /home/nillion/.cargo/bin/cargo install --git https://github.com/wwwehr/libp2p-lookup.git --branch feature/keypair-file;
       args:
         - NIL_SDK_VERSION=0.2.1
     network_mode: 'bridge'
     environment:
       - TZ=Europe/London
-      - PATH=/home/nillion/.local/bin:/home/nillion/.foundry/bin:/home/nillion/.nilup/bin:/home/nillion/.nillion/bin:${PATH}
+      - PATH=/home/nillion/.local/bin:/home/nillion/.foundry/bin:/home/nillion/.nilup/bin:/home/nillion/.nillion/bin:/home/nillion/.cargo/bin:${PATH}
     volumes:
       - '$PWD/../../:/host'
+      - '$HOME/nillion-node.key:/opt/nillion-node.key'
     working_dir: /host
     command:
       - /bin/bash
       - '-c'
       - |
-        /host/tools/bootstrap-local-environment.sh py-client/compute-basic && \
-          pushd py-client/compute-basic && \
-          python3 client.py
+        /host/tools/test-remote-network.sh /opt/nillion-node.key
