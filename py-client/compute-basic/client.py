@@ -7,10 +7,12 @@ In this example, we:
 """
 
 import asyncio
-import py_nillion_client as nillion
 import os
+import pkg_resources
+import py_nillion_client as nillion
 import subprocess
 import sys
+
 
 from py_nillion_client import NodeKey, UserKey
 from dotenv import load_dotenv
@@ -24,8 +26,32 @@ from cosmpy.aerial.client import LedgerClient
 from cosmpy.aerial.wallet import LocalWallet
 from cosmpy.crypto.keypairs import PrivateKey
 
+version = pkg_resources.get_distribution("py_nillion_client").version
+assert version == "0.4.0"
+
+# Run the command and capture the output
+result = subprocess.run(
+    ["pynadac", "--version"], capture_output=True, text=True, check=True
+)
+
+# Extract the version string from the output
+version_output = result.stdout.strip()
+if version_output.startswith("pynadac"):
+    version = version_output.split()[1]
+    assert version == "f28aeb379b7f421de5ded39a44f3d3d43c02ec02"
+
 home = os.getenv("HOME")
-load_dotenv(f"{home}/.config/nillion/nillion-devnet.env")
+this_dir = os.path.abspath(os.path.join(os.path.dirname(__file__)))
+
+optional_env = os.path.join(this_dir, ".env")
+default_env = f"{home}/.config/nillion/nillion-devnet.env"
+
+if os.path.exists(optional_env):
+    print(f"ℹ️   using config: {optional_env}")
+    load_dotenv(optional_env)
+else:
+    print(f"ℹ️   using config: {default_env}")
+    load_dotenv(default_env)
 
 expected_result = int(510)
 
@@ -41,13 +67,12 @@ async def main():
     userkey = UserKey.from_seed(seed)
     nodekey = NodeKey.from_seed(seed)
 
-    target_dir = os.path.abspath(os.path.join(os.path.dirname(__file__)))
     program_src = os.path.abspath(
-        os.path.join(target_dir, "nada", "secret_addition_complete.py")
+        os.path.join(this_dir, "nada", "secret_addition_complete.py")
     )
     try:
         result = subprocess.run(
-            ["pynadac", "--target-dir", target_dir, program_src],
+            ["pynadac", "--target-dir", this_dir, program_src],
             capture_output=True,
             text=True,
         )
@@ -70,7 +95,7 @@ async def main():
 
     # 3. Pay for and store the program
     # Set the program name and path to the compiled program
-    program_mir_path = os.path.join(target_dir, compiled_name)
+    program_mir_path = os.path.join(this_dir, compiled_name)
 
     # Create payments config, client and wallet
     payments_config = create_payments_config(chain_id, grpc_endpoint)
