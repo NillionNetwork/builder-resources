@@ -18,7 +18,7 @@
 > [!NOTE]
 > The README of each example will have instructions for installing the client
 
-1. Use the guide to install [SDK and Tools](https://nillion-fe-docs.vercel.app/nillion-sdk-and-tools)
+1. Use the guide to install [SDK and Tools](https://docs.nillion.com/nillion-sdk-and-tools)
 2. Install python client library and py-nada-lang from pypi - [as described on this page](https://github.com/NillionNetwork/nillion-python-starter/blob/payments-flow-update/README.md)
 3. Install javascript client library from npmjs - [nillion-client-js-browser](https://www.npmjs.com/package/@nillion/nillion-client-js-browser)
 
