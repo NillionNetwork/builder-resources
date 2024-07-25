@@ -1,4 +1,9 @@
 from nada_dsl import *
+import pkg_resources
+
+version = pkg_resources.get_distribution("nada_dsl").version
+assert version == "0.4.0"
+
 def nada_main():
 
     party1 = Party(name="Party1")
