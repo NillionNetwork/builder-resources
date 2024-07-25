@@ -20,8 +20,6 @@ services:
             groupadd --gid 1000 -r nillion; \
             useradd -rm -g nillion --shell /bin/bash --uid 1000 --gid 1000 nillion;
         USER nillion
-        RUN { curl -L https://foundry.paradigm.xyz | bash ; } && \
-          /home/nillion/.foundry/bin/foundryup
         RUN curl -L https://nilup.nilogy.xyz/install.sh | bash; \
           /home/nillion/.nilup/bin/nilup init; \
           /home/nillion/.nilup/bin/nilup install $${NIL_SDK_VERSION}; \
@@ -29,18 +27,21 @@ services:
         RUN  pip install nada-dsl==$${NIL_SDK_VERSION}; \
              pip install py-nillion-client==$${NIL_SDK_VERSION};
       args:
-        - NIL_SDK_VERSION=0.2.1
+        - NIL_SDK_VERSION=0.4.0
     network_mode: 'bridge'
     environment:
       - TZ=Europe/London
-      - PATH=/home/nillion/.local/bin:/home/nillion/.foundry/bin:/home/nillion/.nilup/bin:/home/nillion/.nillion/bin:${PATH}
+      - PATH=/home/nillion/.local/bin:/home/nillion/.nilup/bin:/home/nillion/.nillion/bin:${PATH}
     volumes:
-      - '$PWD/../../:/host'
+      - '$PWD/..:/host'
     working_dir: /host
     command:
       - /bin/bash
       - '-c'
       - |
-        /host/tools/bootstrap-local-environment.sh py-client/compute-basic && \
-          pushd py-client/compute-basic && \
-          python3 client.py
+        { nohup nillion-devnet & } && \
+        echo 'waiting for network...' && \
+        sleep 10 && \
+        pushd compute-basic && \
+        pip install -r requirements.txt && \
+        python3 client.py

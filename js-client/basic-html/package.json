@@ -1,9 +1,0 @@
-{
-  "scripts": {
-    "start": "serve"
-  },
-  "devDependencies": {
-    "@nillion/nillion-client-js-browser": "latest",
-    "serve": "^14.2.1"
-  }
-}
