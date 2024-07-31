@@ -2,7 +2,7 @@ from nada_dsl import *
 import pkg_resources
 
 version = pkg_resources.get_distribution("nada_dsl").version
-assert version == "0.4.0"
+assert version == "0.5.0"
 
 def nada_main():
 

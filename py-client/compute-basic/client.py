@@ -26,19 +26,15 @@ from cosmpy.aerial.client import LedgerClient
 from cosmpy.aerial.wallet import LocalWallet
 from cosmpy.crypto.keypairs import PrivateKey
 
+DESIRED_NILLION_VERSION = "0.5.0"
+
 version = pkg_resources.get_distribution("py_nillion_client").version
-assert version == "0.4.0"
+assert version == DESIRED_NILLION_VERSION
 
 # Run the command and capture the output
-result = subprocess.run(
-    ["pynadac", "--version"], capture_output=True, text=True, check=True
+subprocess.run(
+    ["pynadac", f"+{DESIRED_NILLION_VERSION}", "--version"], capture_output=False, text=True, check=True
 )
-
-# Extract the version string from the output
-version_output = result.stdout.strip()
-if version_output.startswith("pynadac"):
-    version = version_output.split()[1]
-    assert version == "f28aeb379b7f421de5ded39a44f3d3d43c02ec02"
 
 home = os.getenv("HOME")
 this_dir = os.path.abspath(os.path.join(os.path.dirname(__file__)))
@@ -72,7 +68,7 @@ async def main():
     )
     try:
         result = subprocess.run(
-            ["pynadac", "--target-dir", this_dir, program_src],
+            ["pynadac", f"+{DESIRED_NILLION_VERSION}", "--target-dir", this_dir, program_src],
             capture_output=True,
             text=True,
         )

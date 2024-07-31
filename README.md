@@ -7,7 +7,7 @@
 
 ### Current SDK
 
-`0.4.0`
+`0.5.0`
 
 # Getting Started
 
@@ -37,5 +37,6 @@
 
 | SDK | Client  | Testnet  | Local | Remote (Testnet) |  Path |
 |:---:|:-------:|:--------:|:-----:|:----------------:|:-----:|
-| 0.4.0 | Python 3.7+ | photon-v1.0.0-rc.30-amd64 | ✅ | ✅ | [py-client/compute-basic](py-client/compute-basic) |
+| 0.4.0 | Python 3.7+ | photon-v1.0.0-rc.31-amd64 | ✅ | ✅ | [py-client/compute-basic](py-client/compute-basic) |
+
 
