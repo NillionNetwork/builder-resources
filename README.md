@@ -3,7 +3,7 @@
 # Builder Resources
 
 > [!WARNING]
-> This repository contains code examples that may not be working with your SDK version. Please see compatability chart below and please [report any issues](https://github.com/NillionNetwork/builder-resources/issues/new/choose) you uncover.
+> This repository contains code examples that may not be working with your SDK version. Please see compatibility chart below and please [report any issues](https://github.com/NillionNetwork/builder-resources/issues/new/choose) you uncover.
 
 ### Current SDK
 
